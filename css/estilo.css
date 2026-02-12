@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --morado: #7B3F8C;
+    --turquesa: #00B3A4;
+    --fondo: #f2f4f7;
+    --blanco: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--morado), var(--turquesa));
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CONTENEDOR */
+.auth-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* TARJETA */
+.auth-card {
+    background: var(--blanco);
+    width: 380px;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+/* HEADER */
+.auth-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.auth-header img {
+    width: 90px;
+    margin-bottom: 10px;
+}
+
+.auth-header h2 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* TABS */
+.auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    background: #f1f1f1;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.auth-tabs .tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    font-weight: 500;
+}
+
+.auth-tabs .tab.active {
+    background: var(--turquesa);
+    color: white;
+}
+
+/* FORMULARIOS */
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+/* INPUTS CON ICONOS */
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 45px 14px 45px;
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.input-group select {
+    width: 100%;
+    padding: 14px 45px 14px 45px;
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    font-size: 14px;
+    appearance: none;
+    background-color: white;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 3px rgba(0,179,164,0.2);
+}
+
+/* BOTÓN */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--morado), var(--turquesa));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.alert.error {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.alert.success {
+    background-color: var(--turquesa);
+    color: white;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+/* ICONO IZQUIERDO */
+.icon-left {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+/* ICONO DERECHO */
+.icon-right {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    transition: 0.3s;
+}
+
+.icon-right:hover {
+    color: var(--turquesa);
+}
+
+/* INPUT AJUSTADO */
+.input-group input {
+    width: 100%;
+    padding: 14px 45px 14px 45px; 
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 3px rgba(0,179,164,0.2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+    .auth-card {
+        width: 90%;
+    }
+}
