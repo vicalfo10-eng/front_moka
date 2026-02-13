@@ -1,0 +1,248 @@
+:root {
+    --morado: #7B3F8C;
+    --turquesa: #00B3A4;
+    --fondo: #f2f4f7;
+    --blanco: #ffffff;
+}
+
+/* RESET */
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family:'Poppins',sans-serif;
+    background:var(--fondo);
+}
+
+/* LAYOUT */
+.layout {
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width:260px;
+    background:linear-gradient(180deg,var(--morado),var(--turquesa));
+    color:white;
+    display:flex;
+    flex-direction:column;
+    transition:width 0.3s ease;
+    position:relative; /* IMPORTANTE */
+}
+
+/* BOTON TOGGLE PROFESIONAL */
+.sidebar-toggle {
+    position:absolute;
+    top:6px;
+    right:12px;
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:10px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+    color:white;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    transition:all 0.25s ease;
+    z-index:2000;
+    /* oculto por defecto */
+    opacity:0;
+    transform:translateX(10px);
+}
+
+.sidebar:hover .sidebar-toggle {
+    opacity:1;
+    transform:translateX(0);
+}
+
+.sidebar-toggle:hover {
+    background:white;
+    color:var(--morado);
+    transform:scale(1.08);
+}
+
+.sidebar.collapsed .sidebar-toggle i {
+    transform:rotate(180deg);
+}
+
+/* SIDEBAR COLAPSADO */
+.sidebar.collapsed {
+    width:70px;
+}
+
+/* ROTAR ICONO */
+.sidebar.collapsed .sidebar-toggle i {
+    transform:rotate(180deg);
+}
+
+/* LOGO CONTAINER */
+.logo-container {
+    display:flex;
+    align-items:center;
+    padding:20px;
+    margin-top:10px; /* BAJA el logo */
+}
+
+/* LOGO */
+.logo-left {
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-container img {
+    width:42px;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed span,
+.sidebar.collapsed .arrow {
+    display:none !important;
+}
+
+/* MENU */
+.menu {
+    flex:1;
+}
+
+/* MENU ITEMS */
+.menu-item {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 18px;
+    cursor:pointer;
+    transition:all 0.2s ease;
+}
+
+.menu-item:hover {
+    background:rgba(255,255,255,0.12);
+}
+
+/* SUBMENU */
+.submenu {
+    display:none;
+    flex-direction:column;
+}
+
+.sidebar:not(.collapsed) .menu-item.active + .submenu{
+    display:flex;
+}
+
+.submenu a {
+    padding:10px 45px;
+    color:white;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.submenu a:hover {
+    background:rgba(255,255,255,0.1);
+}
+
+/* USER */
+.user-bottom {
+    margin-top:auto;
+}
+
+/* MAIN */
+.main {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+/* TOPBAR */
+.topbar {
+    background:white;
+    padding:16px 28px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    font-size:16px;
+}
+
+/* CONTENT */
+.content {
+    flex:1;
+    padding:25px;
+}
+
+/* CARDS */
+.cards {
+    display:flex;
+    gap:20px;
+}
+
+.card {
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    flex:1;
+    box-shadow:0 3px 12px rgba(0,0,0,0.06);
+}
+
+.chart {
+    margin-top:20px;
+    height:300px;
+}
+
+/* FOOTER */
+.footer {
+    margin-top:auto;
+    background:linear-gradient(90deg,var(--morado),var(--turquesa));
+    color:white;
+    padding:40px 30px 15px;
+}
+
+/* FOOTER CONTAINER */
+.footer-container {
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:40px;
+    max-width:1200px;
+    margin:auto;
+}
+
+.footer-column {
+    display:flex;
+    flex-direction:column;
+    min-width:180px;
+}
+
+.footer-column h4 {
+    margin-bottom:10px;
+    font-size:16px;
+    border-bottom:2px solid rgba(255,255,255,0.3);
+    padding-bottom:5px;
+}
+
+.footer-column a {
+    color:white;
+    text-decoration:none;
+    margin:4px 0;
+    font-size:14px;
+}
+
+.footer-column a:hover {
+    color:#00ffd0;
+}
+
+.footer-column p {
+    margin:4px 0;
+    font-size:14px;
+}
+
+.footer-bottom {
+    text-align:center;
+    margin-top:30px;
+    padding-top:15px;
+    border-top:1px solid rgba(255,255,255,0.3);
+}

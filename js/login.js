@@ -96,7 +96,9 @@ async function handleLogin(e) {
             return
         }
 
-        //localStorage.setItem("usuario", JSON.stringify(data.usuario))
+        console.log(data)
+
+        localStorage.setItem("usuario", JSON.stringify(data.usuario))
 
         mostrarMensaje("Bienvenido al sistema", "success")
 
