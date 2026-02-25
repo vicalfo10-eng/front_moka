@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MOKA | Dashboard</title>
+    <title>MOKA | Clientes</title>
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/formularios.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -15,7 +16,7 @@
             <!-- LOGO -->
             <div class="logo-container">
                 <div class="logo-left">
-                    <img src="assets/img2.jpeg">
+                    <a href="dashboard.html"><img src="assets/img2.jpeg"></a>
                     <span class="logo-text">MOKA</span>
                 </div>
             
@@ -98,21 +99,96 @@
 
             <!-- CONTENT -->
             <div class="content">
-                <div class="cards">
-                    <div class="card">
-                        <h2>Panel Principal</h2>
-                        <p>Gestión de Inventario y Ventas</p>
-                    </div>
+                <div class="card">
+                    <h2 class="form-title">Mantenimiento de Clientes</h2>
+                    <hr class="separator">
 
-                    <div class="card">
-                        <h3>Resumen</h3>
-                        <p>Estado general del sistema</p>
-                    </div>
-                </div>
+                    <form id="formClientes" class="form-grid">
+                        <div class="input-group">
+                            <label for="identificacion">Identificación</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="identificacion" placeholder="Ej: 112345678"
+                                    required maxlength="50"
+                                    style="flex: 1;">
+                                <button type="button" class="btn btn-search" onclick="buscarCliente()" style="padding: 5px 15px;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="nombre">Nombre Completo</label>
+                            <input type="text" id="nombre" placeholder="Ingrese el nombre del cliente"
+                                required maxlength="50">
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" placeholder="88888888"
+                                required pattern="\d{1,8}" maxlength="8" 
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" id="correo" placeholder="cliente@correo.com"
+                                required maxlength="150">
+                        </div>
+                    
+                        <div class="input-group full-width">
+                            <label>Estado</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="estado" value="activo" checked> Activo
+                                </label>
+                                <label>
+                                    <input type="radio" name="estado" value="inactivo"> Inactivo
+                                </label>
+                            </div>
+                        </div>
+                    
+                        <div class="button-container full-width">
+                            <button type="button" class="btn btn-save" onclick="guardarCliente()">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <button type="button" class="btn btn-delete" onclick="eliminarCliente()">
+                                <i class="fa fa-trash"></i> Eliminar
+                            </button>
+                            <button type="reset" class="btn btn-clear">
+                                <i class="fa fa-eraser"></i> Limpiar
+                            </button>
+                        </div>
+                    </form>
 
-                <div class="card chart">
-                    <h3>Gráficos de ventas</h3>
-                    <p>Próximamente...</p>
+                    <hr class="separator" style="margin-top: 30px;">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>Lista de Clientes</h3>
+                            <div class="search-box">
+                                <input type="text" id="filterInput" onkeyup="filtrarTabla()" placeholder="Filtrar por nombre...">
+                            </div>
+                        </div>
+
+                        <div class="responsive-table">
+                            <table id="tablaClientes">
+                                <thead>
+                                    <tr>
+                                        <th>Identificación</th>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyClientes">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;">No hay datos disponibles</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -161,7 +237,9 @@
         </main>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/clientes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>

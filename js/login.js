@@ -157,8 +157,6 @@ async function handleRegister(e) {
     const contrasena = document.getElementById("contrasena").value.trim();
     const id_rol = document.getElementById("roleSelect").value;
 
-    console.log({ id_rol, identificacion, nombre, correo, contrasena })
-
     try {
 
         const response = await fetch(`${API_URL}/user_register`, {

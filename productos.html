@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MOKA | Dashboard</title>
+    <title>MOKA | Clientes</title>
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/formularios.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -15,7 +16,7 @@
             <!-- LOGO -->
             <div class="logo-container">
                 <div class="logo-left">
-                    <img src="assets/img2.jpeg">
+                    <a href="dashboard.html"><img src="assets/img2.jpeg"></a>
                     <span class="logo-text">MOKA</span>
                 </div>
             
@@ -98,21 +99,58 @@
 
             <!-- CONTENT -->
             <div class="content">
-                <div class="cards">
-                    <div class="card">
-                        <h2>Panel Principal</h2>
-                        <p>Gestión de Inventario y Ventas</p>
-                    </div>
+                <div class="card">
+                    <h2 class="form-title">Mantenimiento de Productos</h2>
+                    <hr class="separator">
 
-                    <div class="card">
-                        <h3>Resumen</h3>
-                        <p>Estado general del sistema</p>
-                    </div>
-                </div>
-
-                <div class="card chart">
-                    <h3>Gráficos de ventas</h3>
-                    <p>Próximamente...</p>
+                    <form id="formClientes" class="form-grid">
+                        <div class="input-group">
+                            <label for="identificacion">Identificación</label>
+                            <input type="text" id="identificacion" placeholder="Ej: 1-1234-5678" required>
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="nombre">Nombre Completo</label>
+                            <input type="text" id="nombre" placeholder="Ingrese el nombre del cliente" required>
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" placeholder="8888-8888">
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" id="correo" placeholder="cliente@correo.com">
+                        </div>
+                    
+                        <div class="input-group full-width">
+                            <label>Estado</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="estado" value="activo" checked> Activo
+                                </label>
+                                <label>
+                                    <input type="radio" name="estado" value="inactivo"> Inactivo
+                                </label>
+                            </div>
+                        </div>
+                    
+                        <div class="button-container full-width">
+                            <button type="button" class="btn btn-save" onclick="guardarCliente()">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <button type="button" class="btn btn-update" onclick="actualizarCliente()">
+                                <i class="fa fa-edit"></i> Actualizar
+                            </button>
+                            <button type="button" class="btn btn-delete" onclick="eliminarCliente()">
+                                <i class="fa fa-trash"></i> Eliminar
+                            </button>
+                            <button type="reset" class="btn btn-clear">
+                                <i class="fa fa-eraser"></i> Limpiar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -161,7 +199,7 @@
         </main>
     </div>
 
-    <script src="js/dashboard.js"></script>
+    <script src="js/clientes.js"></script>
 
 </body>
 </html>
