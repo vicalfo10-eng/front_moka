@@ -41,6 +41,9 @@ const logout = () => {
     window.location.href = "index.html"
 }
 
+// Variable para controlar si estamos editando
+let editMode = false;
+
 /**
  * Obtiene los datos del formulario de forma limpia
  */
@@ -59,57 +62,70 @@ const getFormData = () => {
 const limpiarFormulario = () => {
 
     document.getElementById("formClientes").reset()
+    editMode = false
 }
 
 /**
  * Lógica de Búsqueda
  */
-/*async function buscarCliente() {
+const buscarCliente = async () => {
 
-    const idInput = document.getElementById("identificacion");
+    const idInput = document.getElementById("identificacion").value.trim()
     
-    if (!idInput.value) {
-        Swal.fire("Atención", "Por favor ingrese una identificación para buscar", "warning");
-        return;
-    }
-
     try {
-        // Simulación de llamado al API
-        // const response = await fetch(`api/clientes/${idInput.value}`);
-        const data = null; // Simular que no hay datos para el ejemplo
 
-        if (data) {
-            document.getElementById("nombre").value = data.nombre;
-            document.getElementById("telefono").value = data.telefono;
-            document.getElementById("correo").value = data.correo;
-            // Marcar estado según data.estado...
-            editMode = true;
-            Swal.fire("Cliente Encontrado", "Datos cargados correctamente", "success");
+        // Llamada al API (Ajusta la URL según tu backend)
+        const response = await fetch(`${API_URL}/customer_register?identificacion=${idInput}`)
+        const data = await response.json()
+
+        if (data.ok) {
+
+            document.getElementById("nombre").value = data.result.nombre;
+            document.getElementById("telefono").value = data.result.telefono;
+            document.getElementById("correo").value = data.result.correo;
+
+            if (data.result.activo === 1) {
+                document.querySelector('input[name="estado"][value="activo"]').checked = true;
+            } else {
+                document.querySelector('input[name="estado"][value="inactivo"]').checked = true;
+            }
+
+            editMode = true // Activamos modo edición
+
         } else {
-            editMode = false;
+
+            editMode = false // No se encontró, modo nuevo registro
+
             Swal.fire({
                 title: "Información",
-                text: "No se encontró ningún cliente. Puede proceder a crear uno nuevo.",
+                text: data.result.msg,
                 icon: "info",
-                confirmButtonColor: '#7B3F8C'
-            });
+                confirmButtonColor: '#17a2b8'
+            })
         }
     } catch (error) {
-        Swal.fire("Error", "Error de conexión con el servidor", "error");
+
+        Swal.fire("Error", "Error al obtener el cliente: " + error.message, "error")
     }
-}*/
+}
 
 /**
  * Función que decide si Guardar o Actualizar
  */
 const guardarCliente = async () => {
 
-    const getData = getFormData();
-    const estadoNumerico = (getData.estado === "activo") ? 1 : 0;
+    const getData = getFormData()
+    const estadoNumerico = (getData.estado === "activo") ? 1 : 0
+
+    // Definimos los parámetros según el modo (Edición o Registro)
+    const url = editMode ? `${API_URL}/customer_update` : `${API_URL}/customer_register`
+    const metodo = editMode ? "PUT" : "POST"
+    const mensaje = editMode ? "Actualización Exitosa" : "Registro Exitoso"
+
     try {
 
-        const response = await fetch(`${API_URL}/customer_register`, {
-            method: "POST",
+        const response = await fetch(url, {
+            method: metodo,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 identificacion: getData.identificacion,
@@ -143,8 +159,8 @@ const guardarCliente = async () => {
         }
 
         Swal.fire({
-            title: "Registro Exitoso",
-            text: "Cliente guardado correctamente",
+            title: mensaje,
+            text: data.msg,
             icon: "success",
             confirmButtonColor: '#00B3A4'
         })
@@ -164,70 +180,3 @@ const guardarCliente = async () => {
     confirmarAccion("¿Está seguro de eliminar este cliente? Esta acción es irreversible.", 
         () => ejecutarFetch('DELETE', { identificacion: id }));
 }*/
-
-/**
- * Carga la tabla con datos (Simulado)
- */
-const cargarTabla = (listaClientes) => {
-
-    const tbody = document.getElementById("tbodyClientes")
-    tbody.innerHTML = ""
-
-    if (listaClientes.length === 0) {
-
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No se encontraron registros</td></tr>`
-        return
-    }
-
-    listaClientes.forEach(cliente => {
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${cliente.identificacion}</td>
-            <td>${cliente.nombre}</td>
-            <td>${cliente.telefono}</td>
-            <td>${cliente.correo}</td>
-            <td>
-                <span class="badge ${cliente.estado === 'activo' ? 'badge-active' : 'badge-inactive'}">
-                    ${cliente.estado}
-                </span>
-            </td>
-            <td>
-                <button class="btn-table" onclick="seleccionarFila('${cliente.identificacion}')" title="Editar">
-                    <i class="fa fa-edit"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr)
-    })
-}
-
-/**
- * Selecciona un cliente de la tabla y lo carga en el form
- */
-const seleccionarFila = (id) => {
-    // Aquí normalmente buscarías en tu array de datos local
-    // Simulando que encontramos al cliente:
-    document.getElementById("identificacion").value = id
-    buscarCliente() // Reutilizamos la lógica de búsqueda que ya definimos
-}
-
-/**
- * Filtro rápido en cliente (lado cliente)
- */
-const filtrarTabla = () => {
-
-    const input = document.getElementById("filterInput")
-    const filter = input.value.toUpperCase()
-    const table = document.getElementById("tablaClientes")
-    const tr = table.getElementsByTagName("tr")
-
-    for (let i = 1; i < tr.length; i++) {
-
-        let td = tr[i].getElementsByTagName("td")[1] // Columna Nombre
-        if (td) {
-            let textValue = td.textContent || td.innerText
-            tr[i].style.display = textValue.toUpperCase().indexOf(filter) > -1 ? "" : "none"
-        }
-    }
-}

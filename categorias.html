@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MOKA | Clientes</title>
+    <title>MOKA | Categorías</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/formularios.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -100,39 +100,19 @@
             <!-- CONTENT -->
             <div class="content">
                 <div class="card">
-                    <h2 class="form-title">Mantenimiento de Clientes</h2>
+                    <h2 class="form-title">Mantenimiento de Categorías</h2>
                     <hr class="separator">
 
                     <form id="formClientes" class="form-grid">
+                    
                         <div class="input-group">
-                            <label for="identificacion">Identificación</label>
-                            <div style="display: flex; gap: 5px;">
-                                <input type="text" id="identificacion" placeholder="Ej: 112345678"
-                                    required maxlength="50"
-                                    style="flex: 1;">
-                                <button type="button" class="btn btn-search" onclick="buscarCliente()" style="padding: 5px 15px;">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
+                            <label for="nombre">Nombre Categoría</label>
+                            <input type="text" id="nombre" placeholder="Ingrese el nombre de la categoría" required>
                         </div>
                     
                         <div class="input-group">
-                            <label for="nombre">Nombre Completo</label>
-                            <input type="text" id="nombre" placeholder="Ingrese el nombre del cliente"
-                                required maxlength="50">
-                        </div>
-                    
-                        <div class="input-group">
-                            <label for="telefono">Teléfono</label>
-                            <input type="tel" id="telefono" placeholder="88888888"
-                                required pattern="\d{1,8}" maxlength="8" 
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        </div>
-                    
-                        <div class="input-group">
-                            <label for="correo">Correo Electrónico</label>
-                            <input type="email" id="correo" placeholder="cliente@correo.com"
-                                required maxlength="150">
+                            <label for="descripcion">Descripción</label>
+                            <input type="tel" id="descripcion" placeholder="Ingrese una breve descripción de la categoría">
                         </div>
                     
                         <div class="input-group full-width">
@@ -148,10 +128,10 @@
                         </div>
                     
                         <div class="button-container full-width">
-                            <button type="button" class="btn btn-save" onclick="guardarCliente()">
+                            <button type="button" class="btn btn-save" onclick="guardarCategoria()">
                                 <i class="fa fa-save"></i> Guardar
                             </button>
-                            <button type="button" class="btn btn-delete" onclick="eliminarCliente()">
+                            <button type="button" class="btn btn-delete" onclick="eliminarCategoria()">
                                 <i class="fa fa-trash"></i> Eliminar
                             </button>
                             <button type="reset" class="btn btn-clear">
@@ -207,9 +187,7 @@
         </main>
     </div>
 
-    <script src="js/config.js"></script>
-    <script src="js/clientes.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/categorias.js"></script>
 
 </body>
 </html>
