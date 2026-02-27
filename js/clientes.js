@@ -71,6 +71,15 @@ const limpiarFormulario = () => {
 const buscarCliente = async () => {
 
     const idInput = document.getElementById("identificacion").value.trim()
+
+    if (!idInput) {
+        return Swal.fire({
+            title: "Información",
+            text: "El número de identificación es obligatorio.",
+            icon: "info",
+            confirmButtonColor: '#17a2b8'
+        })
+    }
     
     try {
 
@@ -173,10 +182,78 @@ const guardarCliente = async () => {
     }
 }
 
-/*async function eliminarCliente() {
-    const id = document.getElementById("identificacion").value;
-    if (!id) return Swal.fire("Error", "Debe buscar un cliente primero", "error");
+const eliminarCliente = () => {
 
-    confirmarAccion("¿Está seguro de eliminar este cliente? Esta acción es irreversible.", 
-        () => ejecutarFetch('DELETE', { identificacion: id }));
-}*/
+    const id = document.getElementById("identificacion").value.trim();
+
+    if (!id) {
+        return Swal.fire({
+            title: "Información",
+            text: "El número de identificación es obligatorio.",
+            icon: "info",
+            confirmButtonColor: '#17a2b8'
+        })
+    }
+
+    // Usamos tu función de confirmación con el color morado de MOKA
+    confirmarAccion("¿Está seguro de eliminar este cliente?", async () => {
+
+        try {
+            const response = await fetch(`${API_URL}/customer_delete?identificacion=${id}`, {
+                method: "DELETE"
+            })
+
+            const data = await response.json()
+
+            if (data.ok) {
+                Swal.fire({
+                    title: "Eliminado",
+                    text: data.result.msg,
+                    icon: "success",
+                    confirmButtonColor: '#00B3A4'
+                })
+
+                limpiarFormulario()
+
+            } else {
+
+                // Aquí entrará si el SP detectó que tiene ventas (Status 400)
+                Swal.fire({
+                    title: "No se puede eliminar",
+                    text: data.result.msg,
+                    icon: "error",
+                    confirmButtonColor: '#e74c3c'
+                })
+            }
+        } catch (error) {
+
+            Swal.fire("Error", "No se pudo conectar con el servidor", "error")
+        }
+    })
+}
+
+/**
+ * Modal de confirmación genérico (Usando SweetAlert2)
+ */
+const confirmarAccion = (mensaje, callback) => {
+
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: mensaje,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e74c3c', // Morado MOKA
+        cancelButtonColor: '#95a5a6',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar'
+
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            // Verificamos que el callback exista y sea una función
+            if (callback && typeof callback === 'function') {
+                callback()
+            }
+        }
+    })
+}
