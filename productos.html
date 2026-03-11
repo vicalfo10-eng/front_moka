@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOKA | Productos</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <!-- LOGO -->
+            <div class="logo-container">
+                <div class="logo-left">
+                    <a href="dashboard.html"><img src="assets/img2.jpeg"></a>
+                    <span class="logo-text">MOKA</span>
+                </div>
+            
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <!-- MENU -->
+            <nav class="menu">
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-cogs"></i>
+                    <span>Mantenimientos</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="categorias.html">Categorías</a>
+                    <a href="clientes.html">Clientes</a>
+                    <a href="productos.html">Productos</a>
+                    <a href="proveedores.html">Proveedores</a>
+                    <a href="usuarios.html">Usuarios</a>
+                </div>
+
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-sync"></i>
+                    <span>Procesos</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="inventario.html">Inventario</a>
+                    <a href="ventas.html">Ventas</a>
+                </div>
+
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-chart-bar"></i>
+                    <span>Reportes</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="reportes.html">Ver reportes</a>
+                </div>
+
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-building"></i>
+                    <span>Acerca de</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="#">Nuestra empresa</a>
+                </div>
+                
+                <div class="user-bottom">
+                    <div class="menu-item" onclick="toggleMenu(this)">
+                        <i class="fa fa-user-circle"></i>
+                        <span id="nombreUsuario">Usuario</span>
+                        <i class="fa fa-chevron-down arrow"></i>
+                    </div>
+                
+                    <div class="submenu">
+                        <a href="#" onclick="logout()">
+                            <i class="fa fa-sign-out-alt"></i>
+                            Cerrar sesión
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">     
+            <!-- TOPBAR -->
+            <header class="topbar">
+                Bienvenido,
+                <strong id="nombreUsuarioTop">Usuario</strong>
+            </header>
+
+            <!-- CONTENT -->
+            <div class="content">
+                <div class="card">
+                    <h2 class="form-title">Mantenimiento de Productos</h2>
+                    <hr class="separator">
+
+                    <form id="formProductos" class="form-grid">
+                        <div class="input-group">
+                            <label>Categoría</label>
+                            <select id="categorySelect" required>
+                                <option value="" disabled selected>Cargando categorías...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Proveedor</label>
+                            <select id="supplierSelect" required>
+                                <option value="" disabled selected>Cargando proveedores...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="codigo">Código</label>
+                            <input type="text" id="codigo" placeholder="Ingrese el código del producto"
+                                required maxlength="50">
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" placeholder="Ingrese el nombre del producto"
+                                required maxlength="50">
+                        </div>
+                    
+                        <div class="input-group">
+                            <label for="precio">Precio</label>
+                            <input type="number" id="precio" placeholder="0.00"
+                                    step="0.01"
+                                    min="0"
+                                    oninput="validarPrecio(this)"
+                                    required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="stock">Stock</label>
+                            <input type="number" id="stock" placeholder="0"
+                                    step="1"
+                                    min="0"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="stock_min">Stock Mínimo</label>
+                            <input type="number" id="stock_min" placeholder="0"
+                                    step="1"
+                                    min="0"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    required>
+                        </div>
+                    
+                        <div class="input-group full-width">
+                            <label>Estado</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="estado" value="activo" checked> Activo
+                                </label>
+                                <label>
+                                    <input type="radio" name="estado" value="inactivo"> Inactivo
+                                </label>
+                            </div>
+                        </div>
+                    
+                        <div class="button-container full-width">
+                            <button type="button" class="btn btn-save" onclick="guardarProducto()">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                            <button type="button" class="btn btn-delete" onclick="eliminarProducto()">
+                                <i class="fa fa-trash"></i> Eliminar
+                            </button>
+                            <button type="reset" class="btn btn-clear">
+                                <i class="fa fa-eraser"></i> Limpiar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- FOOTER AQUI DENTRO -->
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-column">
+                        <h4>Mantenimientos</h4>
+                            <a href="categorias.html">Categorías</a>
+                            <a href="clientes.html">Clientes</a>
+                            <a href="productos.html">Productos</a>
+                            <a href="proveedores.html">Proveedores</a>
+                            <a href="usuarios.html">Usuarios</a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Procesos</h4>
+                            <a href="inventario.html">Inventario</a>
+                            <a href="ventas.html">Ventas</a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Reportes</h4>
+                        <a href="#">Ventas</a>
+                        <a href="#">Inventario</a>
+                        <a href="#">Financiero</a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Contacto</h4>
+                            <a href="https://api.whatsapp.com/send?phone=50685776011" target="_blank"><p><i class="fab fa-whatsapp"></i> (506) 85776011</p></a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Redes Sociales</h4>
+                            <a href="https://www.facebook.com/share/1ALB4ztb7T/?mibextid=wwXIfr" target="_blank"><p><i class="fab fa-facebook"></i> Facebook</p></a>
+                            <a href="https://www.instagram.com/moka_.creacionesconamor?igsh=Zml5ODNkMGF3cHU%3D&utm_source=qr" target="_blank"><p><i class="fab fa-instagram"></i> Instagram</p></a>
+                            <a href="https://www.tiktok.com/@moka.creaciones.co?_r=1&_t=ZS-93uh4b1ULBI" target="_blank"><p><i class="fab fa-tiktok"></i> TikTok</p></a>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    MOKA © 2026 — Todos los derechos reservados
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/productos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>
