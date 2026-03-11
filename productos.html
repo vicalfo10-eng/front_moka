@@ -105,6 +105,17 @@
 
                     <form id="formProductos" class="form-grid">
                         <div class="input-group">
+                            <label for="codigo">Código</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="codigo" placeholder="Código del producto"
+                                    required maxlength="50">
+                                <button type="button" class="btn btn-search" onclick="buscarProducto()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
                             <label>Categoría</label>
                             <select id="categorySelect" required>
                                 <option value="" disabled selected>Cargando categorías...</option>
@@ -116,12 +127,6 @@
                             <select id="supplierSelect" required>
                                 <option value="" disabled selected>Cargando proveedores...</option>
                             </select>
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="codigo">Código</label>
-                            <input type="text" id="codigo" placeholder="Ingrese el código del producto"
-                                required maxlength="50">
                         </div>
                     
                         <div class="input-group">

@@ -104,15 +104,15 @@ const buscarProveedor = async () => {
 
         if (data.ok) {
 
-            document.getElementById("nombre").value = data.result.nombre;
-            document.getElementById("telefono").value = data.result.telefono;
-            document.getElementById("correo").value = data.result.correo;
-            document.getElementById("direccion").value = data.result.direccion;
+            document.getElementById("nombre").value = data.result.nombre
+            document.getElementById("telefono").value = data.result.telefono
+            document.getElementById("correo").value = data.result.correo
+            document.getElementById("direccion").value = data.result.direccion
 
             if (data.result.activo === 1) {
-                document.querySelector('input[name="estado"][value="activo"]').checked = true;
+                document.querySelector('input[name="estado"][value="activo"]').checked = true
             } else {
-                document.querySelector('input[name="estado"][value="inactivo"]').checked = true;
+                document.querySelector('input[name="estado"][value="inactivo"]').checked = true
             }
 
             editMode = true // Activamos modo edición
