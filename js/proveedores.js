@@ -2,61 +2,62 @@ const API_URL = config.API_URL
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const usuario = JSON.parse(localStorage.getItem("usuario"))
 
     if(!usuario){
 
-        window.location.href="index.html";
-        return;
+        window.location.href = "index.html"
+        return
 
     }
 
     //document.getElementById("nombreUsuario").innerText = usuario;
-    document.getElementById("nombreUsuarioTop").innerText = usuario;
+    document.getElementById("nombreUsuarioTop").innerText = usuario
 
 });
 
 /* SIDEBAR COLLAPSE */
 
-function toggleSidebar(){
+const toggleSidebar = () => {
 
     document.getElementById("sidebar")
-    .classList.toggle("collapsed");
+    .classList.toggle("collapsed")
 
 }
 
 /* MENU EXPAND */
-function toggleMenu(element)
-{
-    const sidebar = document.getElementById("sidebar");
+const toggleMenu = (element) => {
+
+    const sidebar = document.getElementById("sidebar")
 
     if(sidebar.classList.contains("collapsed"))
     {
-        sidebar.classList.remove("collapsed");
-        return;
+        sidebar.classList.remove("collapsed")
+        return
     }
 
-    const isActive = element.classList.contains("active");
+    const isActive = element.classList.contains("active")
 
         document.querySelectorAll(".menu-item").forEach(item=>{
-        item.classList.remove("active");
+        item.classList.remove("active")
 
     });
 
     if(!isActive)
-        element.classList.add("active");
+        element.classList.add("active")
 }
 
 /* LOGOUT */
-function logout(){
+const logout = () => {
 
-    localStorage.removeItem("usuario");
-    window.location.href="index.html";
+    localStorage.removeItem("codigo")
+    localStorage.removeItem("usuario")
+    window.location.href = "index.html"
 
 }
 
 // Variable para controlar si estamos editando
-let editMode = false;
+let editMode = false
 
 /**
  * Obtiene los datos del formulario de forma limpia
@@ -201,7 +202,7 @@ const guardarProveedor = async () => {
 
 const eliminarProveedor = () => {
 
-    const id = document.getElementById("identificacion").value.trim();
+    const id = document.getElementById("identificacion").value.trim()
 
     if (!id) {
         return Swal.fire({

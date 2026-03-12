@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>MOKA | Sistema de Inventario</title>
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="css/acercade.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -99,66 +99,42 @@
 
             <!-- CONTENT -->
             <div class="content">
-                <div class="card">
-                    <h2 class="form-title">Mantenimiento de Clientes</h2>
-                    <hr class="separator">
+                <div class="card about-container">
+                    <div class="about-grid">
+                        <div class="about-image">
+                            <img src="assets/img2.jpeg" alt="MOKA Artesanía">
+                        </div>
 
-                    <form id="formClientes" class="form-grid">
-                        <div class="input-group">
-                            <label for="identificacion">Identificación</label>
-                            <div style="display: flex; gap: 5px;">
-                                <input type="text" id="identificacion" placeholder="Ej: 112345678"
-                                    required maxlength="50"
-                                    style="flex: 1;">
-                                <button type="button" class="btn btn-search" onclick="buscarCliente()" style="padding: 5px 15px;">
-                                    <i class="fa fa-search"></i>
-                                </button>
+                        <div class="about-text">
+                            <h2 class="form-title">Nuestra Historia</h2>
+                            <hr class="separator">
+                            <p>
+                                <strong>MOKA</strong> es un emprendimiento familiar costarricense nacido de la pasión por los detalles y el arte manual. 
+                             Nos dedicamos a la creación de accesorios de belleza únicos, transformando materiales de alta calidad en piezas que cuentan historias.
+                            </p>
+                    
+                            <p>
+                                Desde nuestros delicados collares y pulseras hasta nuestros distintivos joyeros moldeados en <strong>arcilla polimérica</strong>, cada artículo es trabajado pieza por pieza, asegurando que no existan dos iguales.
+                            </p>
+
+                            <div class="valores-grid">
+                                <div class="valor-item">
+                                    <i class="fa fa-heart"></i>
+                                    <span>Hecho con Amor</span>
+                                </div>
+
+                                <div class="valor-item">
+                                    <i class="fa fa-gem"></i>
+                                    <span>Diseños Únicos</span>
+                                </div>
+
+                                <div class="valor-item">
+                                    <i class="fa fa-hands"></i>
+                                    <span>100% Artesanal</span>
+                                </div>
                             </div>
                         </div>
-                    
-                        <div class="input-group">
-                            <label for="nombre">Nombre Completo</label>
-                            <input type="text" id="nombre" placeholder="Ingrese el nombre del cliente"
-                                required maxlength="50">
-                        </div>
-                    
-                        <div class="input-group">
-                            <label for="telefono">Teléfono</label>
-                            <input type="tel" id="telefono" placeholder="88888888"
-                                required pattern="\d{1,8}" maxlength="8" 
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        </div>
-                    
-                        <div class="input-group">
-                            <label for="correo">Correo Electrónico</label>
-                            <input type="email" id="correo" placeholder="cliente@correo.com"
-                                required maxlength="150">
-                        </div>
-                    
-                        <div class="input-group full-width">
-                            <label>Estado</label>
-                            <div class="radio-group">
-                                <label>
-                                    <input type="radio" name="estado" value="activo" checked> Activo
-                                </label>
-                                <label>
-                                    <input type="radio" name="estado" value="inactivo"> Inactivo
-                                </label>
-                            </div>
-                        </div>
-                    
-                        <div class="button-container full-width">
-                            <button type="button" class="btn btn-save" onclick="guardarCliente()">
-                                <i class="fa fa-save"></i> Guardar
-                            </button>
-                            <button type="button" class="btn btn-delete" onclick="eliminarCliente()">
-                                <i class="fa fa-trash"></i> Eliminar
-                            </button>
-                            <button type="reset" class="btn btn-clear">
-                                <i class="fa fa-eraser"></i> Limpiar
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
@@ -207,9 +183,7 @@
         </main>
     </div>
 
-    <script src="js/config.js"></script>
-    <script src="js/clientes.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/acercade.js"></script>
 
 </body>
 </html>

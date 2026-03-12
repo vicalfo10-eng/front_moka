@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MOKA | Categorías</title>
+    <title>MOKA | Sistema de Inventario</title>
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/formularios.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="submenu">
-                    <a href="#">Nuestra empresa</a>
+                    <a href="acercade.html">Nuestra empresa</a>
                 </div>
                 
                 <div class="user-bottom">
@@ -103,16 +103,27 @@
                     <h2 class="form-title">Mantenimiento de Categorías</h2>
                     <hr class="separator">
 
-                    <form id="formClientes" class="form-grid">
-                    
+                    <form id="formCategorias" class="form-grid">
                         <div class="input-group">
-                            <label for="nombre">Nombre Categoría</label>
+                            <label for="codigo">Código</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="codigo" placeholder="123"
+                                    required
+                                    style="flex: 1;">
+                                <button type="button" class="btn btn-search" onclick="buscarCategoria()" style="padding: 5px 15px;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="nombre">Nombre</label>
                             <input type="text" id="nombre" placeholder="Ingrese el nombre de la categoría" required>
                         </div>
                     
                         <div class="input-group">
                             <label for="descripcion">Descripción</label>
-                            <input type="tel" id="descripcion" placeholder="Ingrese una breve descripción de la categoría">
+                            <input type="tel" id="descripcion" placeholder="Ingrese una descripción de la categoría">
                         </div>
                     
                         <div class="input-group full-width">
@@ -187,7 +198,9 @@
         </main>
     </div>
 
+    <script src="js/config.js"></script>
     <script src="js/categorias.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>

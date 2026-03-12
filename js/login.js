@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     LOGIN / REGISTRO
 ========================= */
 
-function toggleTabs(index) {
+const toggleTabs = (index) => {
 
     const loginForm = document.getElementById("loginForm")
     const registerForm = document.getElementById("registerForm")
@@ -70,11 +70,12 @@ function toggleTabs(index) {
    LOGIN
 ========================= */
 
-async function handleLogin(e) {
+const handleLogin = async (e) => {
+
     e.preventDefault()
 
-    const correo = document.getElementById("lcorreo").value.trim();
-    const contrasena = document.getElementById("lcontrasena").value.trim();
+    const correo = document.getElementById("lcorreo").value.trim()
+    const contrasena = document.getElementById("lcontrasena").value.trim()
 
     try {
 
@@ -96,9 +97,8 @@ async function handleLogin(e) {
             return
         }
 
-        console.log(data)
-
-        localStorage.setItem("usuario", JSON.stringify(data.usuario))
+        localStorage.setItem("codigo", JSON.stringify(data.usuario.id_usuario))
+        localStorage.setItem("usuario", JSON.stringify(data.usuario.nombre))
 
         mostrarMensaje("Bienvenido al sistema", "success")
 
@@ -116,31 +116,31 @@ async function handleLogin(e) {
    CARGA ROLES
 ========================= */
 
-async function cargarRoles() {
+const cargarRoles = async () => {
 
-    const select = document.getElementById("roleSelect");
+    const select = document.getElementById("roleSelect")
 
     try {
 
-        const response = await fetch(`${API_URL}/roles`);
-        const data = await response.json();
+        const response = await fetch(`${API_URL}/roles`)
+        const data = await response.json()
 
         if (!response.ok) {
-            throw new Error("No se pudieron cargar los roles");
+            throw new Error("No se pudieron cargar los roles")
         }
 
-        select.innerHTML = '<option value="">Seleccione un rol</option>';
+        select.innerHTML = '<option value="">Seleccione un rol</option>'
 
         data.rol.forEach(rol => {
-            const option = document.createElement("option");
-            option.value = rol.id_rol;
-            option.textContent = rol.nombre;
-            select.appendChild(option);
-        });
+            const option = document.createElement("option")
+            option.value = rol.id_rol
+            option.textContent = rol.nombre
+            select.appendChild(option)
+        })
 
     } catch (error) {
-        console.error("Error cargando roles:", error);
-        select.innerHTML = '<option value="">Error al cargar roles</option>';
+        console.error("Error cargando roles:", error)
+        select.innerHTML = '<option value="">Error al cargar roles</option>'
     }
 }
 
@@ -148,14 +148,15 @@ async function cargarRoles() {
    REGISTRO
 ========================= */
 
-async function handleRegister(e) {
+const handleRegister = async (e) => {
+
     e.preventDefault()
 
-    const identificacion = document.getElementById("identificacion").value.trim();
-    const nombre = document.getElementById("nombre").value.trim();
-    const correo = document.getElementById("correo").value.trim();
-    const contrasena = document.getElementById("contrasena").value.trim();
-    const id_rol = document.getElementById("roleSelect").value;
+    const identificacion = document.getElementById("identificacion").value.trim()
+    const nombre = document.getElementById("nombre").value.trim()
+    const correo = document.getElementById("correo").value.trim()
+    const contrasena = document.getElementById("contrasena").value.trim()
+    const id_rol = document.getElementById("roleSelect").value
 
     try {
 
@@ -192,7 +193,7 @@ async function handleRegister(e) {
    MENSAJES
 ========================= */
 
-function mostrarMensaje(mensaje, tipo) {
+const mostrarMensaje = (mensaje, tipo) => {
 
     let div = document.getElementById("mensaje")
 

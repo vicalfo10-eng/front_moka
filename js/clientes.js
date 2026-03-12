@@ -37,12 +37,13 @@ const toggleMenu = (element) => {
 
 const logout = () => {
 
+    localStorage.removeItem("codigo")
     localStorage.removeItem("usuario")
     window.location.href = "index.html"
 }
 
 // Variable para controlar si estamos editando
-let editMode = false;
+let editMode = false
 
 /**
  * Obtiene los datos del formulario de forma limpia

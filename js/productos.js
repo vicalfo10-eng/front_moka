@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(!usuario){
 
-        window.location.href="index.html"
+        window.location.href = "index.html"
         return
 
     }
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* SIDEBAR COLLAPSE */
 
-function toggleSidebar(){
+const toggleSidebar = () => {
 
     document.getElementById("sidebar")
     .classList.toggle("collapsed")
@@ -30,8 +30,8 @@ function toggleSidebar(){
 }
 
 /* MENU EXPAND */
-function toggleMenu(element)
-{
+const toggleMenu = (element) => {
+
     const sidebar = document.getElementById("sidebar")
 
     if(sidebar.classList.contains("collapsed"))
@@ -52,10 +52,11 @@ function toggleMenu(element)
 }
 
 /* LOGOUT */
-function logout(){
+const logout = () => {
 
+    localStorage.removeItem("codigo")
     localStorage.removeItem("usuario")
-    window.location.href="index.html"
+    window.location.href = "index.html"
 
 }
 
@@ -113,7 +114,7 @@ const limpiarFormulario = () => {
    CARGA CATEWGORÍAS Y PROVEEDORES
 ========================= */
 
-async function cargarCategorias() {
+const cargarCategorias = async () => {
 
     const select = document.getElementById("categorySelect")
 
