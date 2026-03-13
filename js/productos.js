@@ -83,6 +83,21 @@ inputPrecio.addEventListener("input", function (e) {
     }
 })
 
+const inputImpuesto = document.getElementById("impuesto")
+
+inputImpuesto.addEventListener("input", function (e) {
+    let valor = e.target.value
+    
+    // Si contiene un punto decimal
+    if (valor.includes(".")) {
+        const partes = valor.split(".")
+        // Si la parte decimal tiene más de 2 dígitos, recortamos
+        if (partes[1].length > 2) {
+            e.target.value = `${partes[0]}.${partes[1].slice(0, 2)}`
+        }
+    }
+})
+
 // Variable para controlar si estamos editando
 let editMode = false
 
@@ -98,6 +113,7 @@ const getFormData = () => {
         codigo: document.getElementById("codigo").value.trim(),
         nombre: document.getElementById("nombre").value.trim(),
         precio: document.getElementById("precio").value.trim(),
+        impuesto: document.getElementById("impuesto").value.trim(),
         stock: document.getElementById("stock").value.trim(),
         stock_min: document.getElementById("stock_min").value.trim(),
         estado: document.querySelector('input[name="estado"]:checked').value
@@ -198,6 +214,7 @@ const buscarProducto = async () => {
             document.getElementById("supplierSelect").value = data.result.id_proveedor;
             document.getElementById("nombre").value = data.result.nombre
             document.getElementById("precio").value = data.result.precio
+            document.getElementById("impuesto").value = data.result.impuesto
             document.getElementById("stock").value = data.result.stock
             document.getElementById("stock_min").value = data.result.stock_minimo
 
@@ -250,6 +267,7 @@ const guardarProducto = async () => {
                 codigo: getData.codigo,
                 nombre: getData.nombre,
                 precio: getData.precio,
+                impuesto: getData.impuesto,
                 stock: getData.stock,
                 stock_minimo: getData.stock_min,
                 activo: estadoNumerico
