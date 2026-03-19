@@ -103,54 +103,66 @@
                     <h2 class="form-title">Módulo de Ventas</h2>
                     <hr class="separator">
 
-                    <form id="formVentas" class="form-grid">
-                        <div class="form-grid">
-                            <div class="card">
+                    <div class="form-grid">
+                        <div class="form-grid grid-ventas-layout">
+                            <div class="card card-agregar">
                                 <h2 class="form-title">Agregar Productos</h2>
                                 <hr class="separator">
+
                                 <div class="input-group">
                                     <label>Cliente</label>
-                                    <select id="clienteSelect" class="form-control"></select>
+                                    <select id="customerSelect"></select>
                                 </div>
+                            
                                 <br>
-                                <div class="form-grid" style="grid-template-columns: 1fr auto;">
+                            
+                                <div class="form-grid grid-busqueda">
                                     <div class="input-group">
                                         <label>Buscar Producto (Código)</label>
-                                        <input type="text" id="busquedaProducto" placeholder="Escanee o escriba el código">
+                                        <input type="text" id="codigoProducto" placeholder="Escanee o escriba el código">
                                     </div>
-                                    <button class="btn btn-save" style="margin-top: 25px;" onclick="buscarYAgregar()">
+
+                                    <button class="btn btn-save btn-add" onclick="agregarProducto()">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
-                        
-                            <div class="card">
+
+                            <div class="card card-detalle">
                                 <h2 class="form-title">Detalle de Venta</h2>
                                 <hr class="separator">
-                                <div class="responsive-table" style="max-height: 300px;">
+
+                                <div class="responsive-table scroll-detalle">
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>Producto</th>
-                                                <th>Cant.</th>
-                                                <th>Subtotal</th>
-                                                <th>Total</th>
+                                                <th class="text-center">Código</th>
+                                                <th>Nombre</th>
+                                                <th class="text-center">Cant</th>
+                                                <th class="text-right">Precio</th>
+                                                <th class="text-right">Desc %</th>
+                                                <th class="text-right">Total Desc</th>
+                                                <th class="text-right">Impuesto %</th>
+                                                <th class="text-right">Total Imp</th>
+                                                <th class="text-right">Subtotal</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
-                                        <tbody id="carritoBody">
-                                            </tbody>
+
+                                        <tbody id="carritoBody"></tbody>
                                     </table>
                                 </div>
-                                <div class="total-container" style="text-align: right; margin-top: 20px;">
-                                    <h3>Total: <span id="totalVenta">₡0.00</span></h3>
-                                    <button class="btn btn-save" style="width: 100%; justify-content: center; background-color: var(--turquesa);" onclick="procesarVenta()">
+                        
+                                <div class="total-section">
+                                    <h3>Total Venta: <span id="totalVenta">₡0.00</span></h3>
+
+                                    <button class="btn btn-finish" onclick="procesarVenta()">
                                         <i class="fa fa-shopping-cart"></i> Finalizar Venta
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
@@ -204,4 +216,82 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
+
+<div id="modalFactura" class="modal-factura-overlay">
+        <div class="modal-factura-content">
+            <div id="ticket-print-area" class="ticket-container">
+                <div class="ticket-header text-center">
+                    <img src="assets/img2.jpeg" style="width: 60px; border-radius: 50%;">
+                    <h1>MOKA CREACIONES</h1>
+                    <p>Creaciones con Amor</p>
+                    <p>Alajuela, Costa Rica</p>
+                    <p>Tel: (506) 8577-6011</p>
+                    <div class="ticket-divider"></div>
+                    <p><strong>FACTURA #<span id="facturaNumero">000000</span></strong></p>
+                    <p id="facturaFecha"></p>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="ticket-info">
+                    <p><strong>Cliente:</strong> <span id="facturaCliente"></span></p>
+                    <p><strong>Vendedor:</strong> <span id="facturaVendedor"></span></p>
+                </div>
+                <div class="ticket-divider"></div>
+
+                <table class="ticket-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Can/Des</th>
+                            <th>Total</th>
+                        </tr>
+
+                        <tr>
+                            <th>Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facturaDetalleBody">
+                        </tbody>
+                </table>
+
+                <div class="ticket-divider"></div>
+                <div class="ticket-totals">
+                    <div class="total-row">
+                        <span>SUBTOTAL:</span>
+                        <span id="facturaSubtotal"></span>
+                    </div>
+
+                    <div class="total-row">
+                        <span>DESCUENTO:</span>
+                        <span id="facturaDescuento"></span>
+                    </div>
+
+                    <div class="total-row">
+                        <span>IMPUESTOS:</span>
+                        <span id="facturaImpuestos"></span>
+                    </div>
+
+                    <div class="total-row total-final">
+                        <span>TOTAL:</span>
+                        <span id="facturaTotal"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+                <p class="text-center">¡Gracias por su compra!</p>
+                <p class="text-center" style="font-size: 10px;">MOKA © 2026</p>
+            </div>
+
+            <div class="modal-factura-actions no-print">
+                <button class="btn-ticket-print" onclick="window.print()">
+                    <i class="fa fa-print"></i> Imprimir / Exportar PDF
+                </button>
+
+                <button class="btn-ticket-close no-print" onclick="document.getElementById('modalFactura').style.display='none'" style="width: 100%;">
+                    Cerrar Vista Previa
+                </button>
+            </div>
+        </div>
+    </div>
 </html>

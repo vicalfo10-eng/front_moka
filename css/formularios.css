@@ -180,3 +180,200 @@ table tbody tr:hover {
     color: var(--turquesa);
     transform: scale(1.2);
 }
+
+/* Clases utilitarias para alineación */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Ajuste para la cuadrícula de búsqueda */
+.grid-busqueda {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+}
+
+.btn-add {
+    height: 42px; /* Alineado con el input */
+    margin-bottom: 2px;
+}
+
+/* Contenedor de scroll para el detalle */
+.scroll-detalle {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+/* Sección de totales mejorada */
+.total-section {
+    text-align: right;
+    margin-top: 20px;
+    border-top: 2px solid #eee;
+    padding-top: 15px;
+}
+
+.total-section h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.total-section span {
+    color: var(--morado);
+    font-weight: 800;
+}
+
+.btn-finish {
+    width: 100%;
+    justify-content: center;
+    background-color: var(--turquesa);
+    font-size: 1.1rem;
+    padding: 15px;
+}
+
+/* Inputs dentro de la tabla */
+.input-tabla {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.text-danger {
+    color: #e74c3c;
+}
+
+/* Layout específico para el módulo de ventas */
+.grid-ventas-layout {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr; 
+    gap: 20px;
+    align-items: start;
+}
+
+/* Opcional: Si la pantalla es pequeña (Móviles), que vuelvan a ser uno sobre otro */
+@media (max-width: 1024px) {
+    .grid-ventas-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Estilo para asegurar que el card de detalle aproveche bien el ancho */
+.card-detalle {
+    min-width: 0;
+}
+
+.scroll-detalle {
+    max-height: 500px;
+}
+
+/* Contenedor principal que bloquea toda la pantalla */
+    .modal-factura-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
+        backdrop-filter: blur(4px);    /* Efecto de desenfoque atrás */
+        display: none;                 /* Se activa con JS */
+        justify-content: center;       /* Centrado horizontal */
+        align-items: center;           /* Centrado vertical */
+        z-index: 99999;                /* Por encima de todo */
+    }
+
+    /* La "tarjeta" que contiene el ticket */
+    .modal-factura-content {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        max-height: 95vh;
+        overflow-y: auto;
+        animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Estética del Ticket */
+    .ticket-container {
+        width: 320px; /* Un poco más ancho para mejor lectura */
+        background: #fff;
+        padding: 10px;
+        color: #000;
+        font-family: 'Courier New', Courier, monospace;
+        line-height: 1.2;
+    }
+
+    .ticket-header img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        border: 1px solid #eee;
+    }
+
+    .ticket-divider { 
+        border-top: 1px dashed #000; 
+        margin: 12px 0; 
+    }
+
+    /* Botones más modernos */
+    .modal-factura-actions {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-ticket-print {
+        background-color: #00B3A4;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-ticket-print:hover { background-color: #008f83; }
+
+    /* Botón de Cerrar Personalizado */
+.btn-ticket-close {
+    width: 100%;
+    height: 45px;
+    display: flex;           /* Activa flexbox */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    background-color: #f8f9fa; /* Gris muy claro */
+    color: #333;             /* Texto gris oscuro/negro para contraste */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-ticket-close:hover {
+    background-color: #e2e6ea;
+    color: #000;
+    border-color: #bbb;
+}
+
+/* REGLAS DE IMPRESIÓN */
+@media print {
+    body * { visibility: hidden !important; }
+    #ticket-print-area, #ticket-print-area * { visibility: visible !important; }
+    #ticket-print-area {
+        position: fixed;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 80mm; /* Ancho estándar de ticket térmico */
+    }
+    .no-print { display: none !important; }
+}
