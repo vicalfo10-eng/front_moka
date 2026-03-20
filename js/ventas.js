@@ -195,10 +195,16 @@ const renderCarrito = () => {
 
     const body = document.getElementById('carritoBody')
     body.innerHTML = ""
-    let totalFactura = 0
+    let subTotal = 0
+    let totalDescuento = 0
+    let totalImpuesto = 0
+    let totalFactura = 0    
 
     carrito.forEach((item, index) => {
 
+        subTotal += item.subtotal
+        totalDescuento += item.descuento
+        totalImpuesto += item.monto_impuesto
         totalFactura += item.total_linea
 
         // Función auxiliar interna para formatear a 2 decimales con miles
@@ -245,6 +251,21 @@ const renderCarrito = () => {
     })
 
     // Total final también con 2 decimales
+    document.getElementById('subTotal').innerText = `₡${subTotal.toLocaleString('es-CR', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+    })}`
+
+    document.getElementById('totalDescuento').innerText = `₡${totalDescuento.toLocaleString('es-CR', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+    })}`
+
+    document.getElementById('totalImpuesto').innerText = `₡${totalImpuesto.toLocaleString('es-CR', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+    })}`
+
     document.getElementById('totalVenta').innerText = `₡${totalFactura.toLocaleString('es-CR', { 
         minimumFractionDigits: 2, 
         maximumFractionDigits: 2 
@@ -399,12 +420,12 @@ const mostrarTicket = (idVenta) => {
 
         body.innerHTML += `
             <tr>
-                <td>${item.codigo}</td>
-                <td>${item.cantidad}/${f(item.descuento_porc)}</td>
-                <td>${f(item.precio)}</td>
+                <td class="text-left">${item.codigo}</td>
+                <td class="text-left">${item.cantidad}/${f(item.descuento_porc)}</td>
+                <td class="text-left">${f(item.precio)}</td>
             </tr>
             <tr>
-                <td>${f(item.nombre)}</td>
+                <td class="text-left">${f(item.nombre)}</td>
             </tr>
         `
     })

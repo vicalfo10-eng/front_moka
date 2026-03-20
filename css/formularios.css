@@ -377,3 +377,21 @@ table tbody tr:hover {
     }
     .no-print { display: none !important; }
 }
+
+.card-history {
+    margin-top: 20px;
+}
+
+.header-historial {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text-success { 
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}

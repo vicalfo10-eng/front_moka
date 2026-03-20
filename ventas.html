@@ -154,6 +154,9 @@
                                 </div>
                         
                                 <div class="total-section">
+                                    <h4>SubTotal: <span id="subTotal">₡0.00</span></h4>
+                                    <h4>Descuento: <span id="totalDescuento">₡0.00</span></h4>
+                                    <h4>Impuesto: <span id="totalImpuesto">₡0.00</span></h4>
                                     <h3>Total Venta: <span id="totalVenta">₡0.00</span></h3>
 
                                     <button class="btn btn-finish" onclick="procesarVenta()">
@@ -242,13 +245,13 @@
                 <table class="ticket-table">
                     <thead>
                         <tr>
-                            <th>Código</th>
-                            <th>Can/Des</th>
-                            <th>Total</th>
+                            <th class="text-left">Código</th>
+                            <th class="text-left">Can/Des</th>
+                            <th class="text-left">Total</th>
                         </tr>
 
                         <tr>
-                            <th>Producto</th>
+                            <th class="text-left">Producto</th>
                         </tr>
                     </thead>
                     <tbody id="facturaDetalleBody">
