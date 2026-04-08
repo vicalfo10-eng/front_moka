@@ -99,20 +99,52 @@
             <!-- CONTENT -->
             <div class="content">
                 <div class="cards">
-                    <div class="card">
-                        <h2>Panel Principal</h2>
-                        <p>Gestión de Inventario y Ventas</p>
-                    </div>
+                    <div class="card main-panel">
+                        <div class="kpi-header">
+                            <h2>Panel Principal</h2>
+                            <p>Gestión de Inventario y Ventas</p>
+                        </div>
 
-                    <div class="card">
-                        <h3>Resumen</h3>
-                        <p>Estado general del sistema</p>
+                        <div class="kpi-grid">
+                            <div class="kpi-card ventas">
+                                <div class="kpi-icon"><i class="fa fa-coins"></i></div>
+                                <div class="kpi-data">
+                                    <h3>Total Ventas (Mes)</h3>
+                                    <p id="kpiVentas">₡ 0.00</p>
+                                </div>
+                            </div>
+                        
+                            <div class="kpi-card stock">
+                                <div class="kpi-icon"><i class="fa fa-boxes"></i></div>
+                                <div class="kpi-data">
+                                    <h3>Productos en Stock</h3>
+                                    <p id="kpiStock">0 unidades</p>
+                                </div>
+                            </div>
+                        
+                            <div class="kpi-card movimientos">
+                                <div class="kpi-icon"><i class="fa fa-exchange-alt"></i></div>
+                                <div class="kpi-data">
+                                    <h3>Movimientos Hoy</h3>
+                                    <p id="kpiMovimientos">0</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="card chart">
-                    <h3>Gráficos de ventas</h3>
-                    <p>Próximamente...</p>
+        
+                <div class="card chart-container">
+                    <div class="chart-header">
+                        <h2>Análisis de Negocio</h2>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="chart-box">
+                            <canvas id="chartVentasSemanales"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="chartProductosTop"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -136,9 +168,8 @@
 
                     <div class="footer-column">
                         <h4>Reportes</h4>
-                        <a href="#">Ventas</a>
-                        <a href="#">Inventario</a>
-                        <a href="#">Financiero</a>
+                        <a href="reportes.html">Inventario</a>
+                        <a href="reportes.html">Ventas</a>
                     </div>
 
                     <div class="footer-column">
@@ -161,7 +192,9 @@
         </main>
     </div>
 
+    <script src="js/config.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>

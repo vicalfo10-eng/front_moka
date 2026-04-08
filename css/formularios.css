@@ -99,6 +99,7 @@
 .btn-save { background-color: #3498db; }
 .btn-delete { background-color: #e74c3c; }
 .btn-clear { background-color: #95a5a6; }
+.btn-pdf { background-color: #d8534c; }
 
 .btn:hover {
     filter: brightness(0.9);
@@ -255,6 +256,10 @@ table tbody tr:hover {
     .grid-ventas-layout {
         grid-template-columns: 1fr;
     }
+}
+
+.card {
+    margin-top: 20px;
 }
 
 /* Estilo para asegurar que el card de detalle aproveche bien el ancho */

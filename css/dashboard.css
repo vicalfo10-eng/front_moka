@@ -182,7 +182,7 @@ body {
 
 .card {
     background:white;
-    padding:22px;
+    padding:12px;
     border-radius:12px;
     flex:1;
     box-shadow:0 3px 12px rgba(0,0,0,0.06);
@@ -191,6 +191,122 @@ body {
 .chart {
     margin-top:20px;
     height:300px;
+}
+
+/* Espaciado vertical solicitado */
+.kpi-header {
+    margin-bottom: 10px; /* Espacio entre el texto y las tarjetas */
+}
+
+.kpi-header h2 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.kpi-header p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Grid de los KPIs */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Estilo base de las tarjetas KPI */
+.kpi-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    border-bottom: 4px solid transparent; /* Efecto visual inferior */
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Iconos de los KPIs */
+.kpi-icon {
+    font-size: 2rem;
+    padding: 10px;
+    border-radius: 8px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.kpi-data h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.kpi-data p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* Colores específicos para cada KPI */
+.ventas {
+    border-left: 6px solid #8e44ad; /* Morado MOKA */
+}
+.ventas .kpi-icon {
+    background-color: #f4ecf7;
+    color: #8e44ad;
+}
+
+.stock {
+    border-left: 6px solid #16a085; /* Turquesa */
+}
+.stock .kpi-icon {
+    background-color: #e8f6f3;
+    color: #16a085;
+}
+
+.movimientos {
+    border-left: 6px solid #e67e22; /* Naranja */
+}
+.movimientos .kpi-icon {
+    background-color: #fef5e7;
+    color: #e67e22;
+}
+
+.chart-container {
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.chart-header {
+    margin-bottom: 10px; /* Espacio entre el texto y las tarjetas */
+}
+
+.chart-header h2 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(00px, 1fr));
+    gap: 30px;
+    margin-top: 10px;
+}
+
+.chart-box {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    height: 300px; /* Altura controlada para los gráficos */
 }
 
 /* FOOTER */

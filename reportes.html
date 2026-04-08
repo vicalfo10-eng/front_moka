@@ -100,101 +100,53 @@
             <!-- CONTENT -->
             <div class="content">
                 <div class="card">
-                    <h2 class="form-title">Registro de Movimientos</h2>
+                    <h2 class="form-title">Generación de Reportes</h2>
                     <hr class="separator">
-                
-                    <form id="formInventario" class="form-grid">
-                        <div class="input-group">
-                            <label for="codigo">Código</label>
-                            <div style="display: flex; gap: 5px;">
-                                <input type="text" id="codigo" placeholder="Código del producto"
-                                    required maxlength="50">
-                                <button type="button" class="btn btn-search" onclick="buscarProducto()">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
 
+                    <div class="form-grid">
                         <div class="input-group">
-                            <label for="nombre">Nombre</label>
-                            <input type="hidden" id="codigoProducto">
-                            <input type="text" id="nombre" placeholder="Nombre del producto"
-                                required maxlength="50" disabled>
-                        </div>
-                    
-                        <div class="input-group">
-                            <label>Tipo de Movimiento</label>
-                            <select id="tipoMovimiento" required>
-                                <option value="ENTRADA">Entrada (+)</option>
-                                <option value="SALIDA">Salida (-)</option>
+                            <label>Tipo de Reporte</label>
+                            <select id="tipoReporte" onchange="cambiarInterfazFiltros()">
+                                <option value="VENTAS_FECHAS">Ventas por Rango de Fechas</option>
+                                <option value="STOCK_BAJO">Productos con Stock Bajo</option>
+                                <option value="MOVIMIENTOS_TIPO">Movimientos por Tipo (Entrada/Salida)</option>
+                                <option value="MAS_VENDIDOS">Top 10 Productos Más Vendidos</option>
                             </select>
                         </div>
                     
-                        <div class="input-group">
-                            <label for="cantidad">Cantidad</label>
-                            <input type="number" id="cantidad" placeholder="0" 
-                                min="1" required>
+                        <div class="input-group" id="grupoFechaInicio">
+                            <label>Fecha Inicio</label>
+                            <input type="date" id="fechaInicio">
                         </div>
                     
-                        <div class="input-group full-width">
-                            <label for="descripcion">Descripción</label>
-                            <input type="text" id="descripcion" placeholder="Motivo del movimiento"
-                                maxlength="255">
+                        <div class="input-group" id="grupoFechaFin">
+                            <label>Fecha Fin</label>
+                            <input type="date" id="fechaFin">
                         </div>
                     
                         <div class="button-container full-width">
-                            <button type="button" class="btn btn-save" onclick="guardarMovimiento()">
-                                <i class="fa fa-save"></i> Registrar
+                            <button class="btn btn-save" onclick="generarReporte()">
+                                <i class="fa fa-file-alt"></i> Generar Reporte
                             </button>
-
-                            <button type="reset" class="btn btn-clear" onclick="limpiarFormulario()">
+                            <button class="btn btn-pdf" onclick="window.print()">
+                                <i class="fa fa-print"></i> Imprimir / PDF
+                            </button>
+                            <button class="btn btn-clear" onclick="limpiarFormulario()">
                                 <i class="fa fa-eraser"></i> Limpiar
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             
-                <div class="card-history">
-                    <div class="header-historial">
-                        <h2 class="form-title">Historial de Movimientos</h2>
-
-                        <div class="search-box" style="display: flex; gap: 10px;">
-                            <input type="text" id="buscarMovProducto" placeholder="Código del producto..." class="input-search">
-
-                            <button class="btn btn-search" onclick="cargarHistorial()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <hr class="separator">
-                
-                    <div class="table-container">
-                        <table class="table-moka" id="tablaHistorial">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Código</th>
-                                    <th>Producto</th>
-                                    <th>Tipo</th>
-                                    <th>Cant.</th>
-                                    <th>Descripción</th>
-                                    <th>Usuario</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyHistorial">
-                                </tbody>
+                <div class="card">
+                    <div id="contenedorTablaReporte" class="table-container">
+                        <table class="table-moka" id="tablaReporte">
+                            <thead id="theadReporte">
+                                </thead>
+                            <tbody id="tbodyReporte">
+                                <tr><td colspan="100%" style="text-align:center;">Seleccione un reporte y presione generar</td></tr>
+                            </tbody>
                         </table>
-                    </div>
-
-                    <div class="pagination-container" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-                        <button class="btn btn-clear" onclick="cambiarPagina(-1)" id="btnAnterior">
-                            <i class="fa fa-chevron-left"></i> Anterior
-                        </button>
-
-                        <span id="infoPagina" style="align-self: center; font-weight: bold;">Página 1</span>
-                        <button class="btn btn-clear" onclick="cambiarPagina(1)" id="btnSiguiente">
-                            Siguiente <i class="fa fa-chevron-right"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -244,7 +196,7 @@
     </div>
 
     <script src="js/config.js"></script>
-    <script src="js/inventario.js"></script>
+    <script src="js/reportes.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
