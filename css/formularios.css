@@ -400,3 +400,7 @@ table tbody tr:hover {
 .text-danger {
     color: #dc3545 !important;
 }
+
+.hidden {
+    display: none !important;
+}

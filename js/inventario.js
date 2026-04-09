@@ -51,8 +51,8 @@ const toggleMenu = (element) => {
 const logout = () => {
 
     localStorage.removeItem("codigo")
-    localStorage.removeItem("usuario");
-    window.location.href = "index.html";
+    localStorage.removeItem("usuario")
+    window.location.href = "index.html"
 
 }
 
@@ -96,8 +96,8 @@ const buscarProducto = async () => {
 
         if (data.ok) {
 
-            document.getElementById("codigoProducto").value = data.result.id_producto;
-            document.getElementById("nombre").value = data.result.nombre;
+            document.getElementById("codigoProducto").value = data.result.id_producto
+            document.getElementById("nombre").value = data.result.nombre
 
         } else {
 
@@ -161,7 +161,7 @@ const guardarMovimiento = async () => {
             confirmButtonColor: '#00B3A4'
         })
 
-        limpiarFormulario() // limpiar formulario
+        limpiarFormulario()
 
     } catch (error) {
 
@@ -172,7 +172,7 @@ const guardarMovimiento = async () => {
 // Función para buscar y cargar la tabla
 let paginaActual = 1
 
-const cargarHistorial = async ( nuevaPagina = 1) => {
+const cargarHistorial = async ( nuevaPagina = 1 ) => {
     
     paginaActual = nuevaPagina
 
@@ -184,20 +184,19 @@ const cargarHistorial = async ( nuevaPagina = 1) => {
         const response = await fetch(`${API_URL}/inventory_movements?codigo=${codigo}&pagina=${paginaActual}`)
         const res = await response.json()
 
-        let listaMovimientos = [];
+        let listaMovimientos = []
 
         if (res.result) {
-            // Si res.result ya es un array, lo usamos. 
-            // Si es un objeto único (como el que pusiste), lo envolvemos en [ ]
-            listaMovimientos = Array.isArray(res.result) ? res.result : [res.result];
+
+            listaMovimientos = Array.isArray(res.result) ? res.result : [res.result]
         }
 
-        tbody.innerHTML = ''; 
+        tbody.innerHTML = ''
 
         if (listaMovimientos.length > 0) {
             listaMovimientos.forEach(mov => {
                 // Formato de fecha para Costa Rica
-                const fechaCR = new Date(mov.fecha).toLocaleString('es-CR', { hour12: false });
+                const fechaCR = new Date(mov.fecha).toLocaleString('es-CR', { hour12: false })
             
                 tbody.innerHTML += `
                     <tr>
@@ -210,21 +209,22 @@ const cargarHistorial = async ( nuevaPagina = 1) => {
                         <td>${mov.cantidad}</td>
                         <td>${mov.descripcion || ''}</td>
                         <td>${mov.nombre_usuario}</td>
-                    </tr>`;
-            });
+                    </tr>`
+            })
         
             // Usamos el campo total_registros que viene en tu objeto para la paginación
-            const totalRegistros = listaMovimientos[0].total_registros;
+            const totalRegistros = listaMovimientos[0].total_registros
 
-            document.getElementById('infoPagina').innerText = `Página ${paginaActual}`;
-            document.getElementById('btnAnterior').disabled = (paginaActual === 1);
+            document.getElementById('infoPagina').innerText = `Página ${paginaActual}`
+            document.getElementById('btnAnterior').disabled = (paginaActual === 1)
 
             // Si el total de registros es mayor a lo que ya mostramos (página * 10)
-            document.getElementById('btnSiguiente').disabled = (paginaActual * 10 >= totalRegistros);
+            document.getElementById('btnSiguiente').disabled = (paginaActual * 10 >= totalRegistros)
         
         } else {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No hay registros para mostrar</td></tr>';
-            document.getElementById('btnSiguiente').disabled = true;
+
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No hay registros para mostrar</td></tr>'
+            document.getElementById('btnSiguiente').disabled = true
         }
 
     } catch (error) {

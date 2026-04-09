@@ -80,18 +80,59 @@ const limpiarFormulario = () => {
             <td colspan="100%" style="text-align:center;">Seleccione un reporte y presione generar</td>
         </tr>`
 
+    cambiarInterfazFiltros()
+
 }
 
-// Función para generar el reporte
-const generarReporte = async () => {
+const cambiarInterfazFiltros = () => {
+
+    const tipo = document.getElementById('tipoReporte').value
+    const grupoInicio = document.getElementById('grupoFechaInicio')
+    const grupoFin = document.getElementById('grupoFechaFin')
+    const anterior = document.getElementById('btnAnterior')
+    const pagina = document.getElementById('infoPagina')
+    const siguiente = document.getElementById('btnSiguiente') // Contenedor de botones de paginación
+
+    if (tipo === 'VENTAS_FECHAS') {
+
+        grupoInicio.classList.remove('hidden')
+        grupoFin.classList.remove('hidden')
+
+    } else {
+
+        grupoInicio.classList.add('hidden')
+        grupoFin.classList.add('hidden')
+    }
+
+    if (tipo === 'MAS_VENDIDOS') {
+
+        anterior.style.display = 'none'
+        pagina.style.display = 'none'
+        siguiente.style.display = 'none'
+
+    } else {
+
+        anterior.style.display = 'flex'
+        pagina.style.display = 'flex'
+        siguiente.style.display = 'flex'
+    }
+}
+
+// Función para buscar y cargar la tabla
+let paginaActual = 1
+
+const generarReporte = async ( nuevaPagina = 1 ) => {
+
+    paginaActual = nuevaPagina
+
     const tipo = document.getElementById('tipoReporte').value
     const fechaInicio = document.getElementById('fechaInicio').value
     const fechaFin = document.getElementById('fechaFin').value
     const tbody = document.getElementById('tbodyReporte')
     const thead = document.getElementById('theadReporte')
 
-    // Validación básica de fechas para el reporte de ventas
     if (tipo === 'VENTAS_FECHAS' && (!fechaInicio || !fechaFin)) {
+
         Swal.fire({
             title: "Información",
             text: "Debe seleccionar un tipo y un rango de fechas valido.",
@@ -103,57 +144,119 @@ const generarReporte = async () => {
 
     try {
 
-        // Asumimos que tu endpoint en Node acepta estos parámetros
-        const response = await fetch(`${API_URL}/sales-by-date?tipo=${tipo}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+        const response = await fetch(`${API_URL}/sales-by-date?tipo=${tipo}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}&pagina=${paginaActual}`)
         const data = await response.json()
 
-        // Limpiar tabla
         tbody.innerHTML = ''
         thead.innerHTML = ''
 
-        // El SP devuelve un array. Validamos el primer elemento (estándar MOKA)
         const lista = (data.result && data.result) ? data.result : []
-        console.log("Respuesta del SP:", lista) // Verificar respuesta del SP
         const infoControl = lista[0] || {}
- // Verificar respuesta del SP
+
         if (infoControl.ok === 1) {
-            
-            // 1. Configurar encabezados según el reporte
-            if (tipo === 'VENTAS_FECHAS') {
-                thead.innerHTML = `
-                    <tr>
-                        <th>ID Venta</th>
-                        <th>Fecha/Hora</th>
-                        <th>Cliente</th>
-                        <th>Vendedor</th>
-                        <th>Total</th>
-                    </tr>`
-                
-                // 2. Pintar filas
-                lista.forEach(venta => {
-                    tbody.innerHTML += `
+
+            switch (tipo) {
+
+                case 'VENTAS_FECHAS':
+
+                    thead.innerHTML = `
                         <tr>
-                            <td>#${venta.id_venta}</td>
-                            <td>${venta.fecha}</td>
-                            <td>${venta.cliente}</td>
-                            <td>${venta.vendedor}</td>
-                            <td><strong>₡${parseFloat(venta.total).toLocaleString('es-CR')}</strong></td>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Vendedor</th>
+                            <th>Total</th>
+                        </tr>`
+                    
+                        lista.forEach(v => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>#${v.id_venta}</td>
+                                <td>${v.fecha}</td>
+                                <td>${v.cliente}</td>
+                                <td>${v.vendedor}</td>
+                                <td>₡${parseFloat(v.total).toLocaleString('es-CR')}</td>
+                            </tr>`
+
+                        // Usamos el campo total_registros que viene en tu objeto para la paginación
+                        const totalRegistros = infoControl.total_registros
+
+                        document.getElementById('infoPagina').innerText = `Página ${paginaActual}`
+                        document.getElementById('btnAnterior').disabled = (paginaActual === 1)
+
+                        // Si el total de registros es mayor a lo que ya mostramos (página * 10)
+                        document.getElementById('btnSiguiente').disabled = (paginaActual * 10 >= totalRegistros)
+                    })
+                    break
+
+                case 'STOCK_BAJO':
+
+                    thead.innerHTML = `
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th class="text-center">Stock Actual</th>
+                            <th class="text-center">Stock Mínimo</th>
                         </tr>`
 
-                })
+                    lista.forEach(p => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${p.codigo}</td>
+                                <td>${p.nombre}</td>
+                                <td class="text-danger text-center"><strong>${p.stock}</strong></td>
+                                <td class="text-center">${p.stock_minimo}</td>
+                            </tr>`
+
+                        // Usamos el campo total_registros que viene en tu objeto para la paginación
+                        const totalRegistros = infoControl.total_registros
+                                    
+                        document.getElementById('infoPagina').innerText = `Página ${paginaActual}`
+                        document.getElementById('btnAnterior').disabled = (paginaActual === 1)
+                                    
+                        // Si el total de registros es mayor a lo que ya mostramos (página * 10)
+                        document.getElementById('btnSiguiente').disabled = (paginaActual * 10 >= totalRegistros)
+                    })
+                    break
+
+                case 'MAS_VENDIDOS':
+
+                    thead.innerHTML = `
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Unidades</th>
+                            <th>Ingresos</th>
+                        </tr>`
+
+                    lista.forEach((p, index) => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${p.nombre}</td>
+                                <td>${p.total_unidades}</td>
+                                <td>₡${parseFloat(p.total_ingresos).toLocaleString('es-CR')}</td>
+                            </tr>`
+                    })
+                    break
             }
-            // Aquí agregarás los demás elses if para STOCK_BAJO, etc.
 
         } else {
 
-            // Manejo de error según el mensaje del SP
-            tbody.innerHTML = `<tr><td colspan="100%" style="text-align:center;">${infoControl.msg || 'No hay datos'}</td></tr>`
+            tbody.innerHTML = `<tr><td colspan="100%" style="text-align:center;">${infoControl.msg || 'Sin datos'}</td></tr>`
         }
-
     } catch (error) {
 
-        console.error("Error al generar reporte:", error)
-        tbody.innerHTML = `<tr><td colspan="100%" style="text-align:center; color:red;">Error de conexión con el servidor</td></tr>`
+        console.error(error)
+        tbody.innerHTML = `<tr><td colspan="100%" style="text-align:center; color:red;">Error de servidor</td></tr>`
+    }
+}
 
+const cambiarPagina = (delta) => {
+
+    const proximaPagina = paginaActual + delta
+
+    if (proximaPagina > 0) {
+        generarReporte(proximaPagina)
     }
 }

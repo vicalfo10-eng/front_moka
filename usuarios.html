@@ -100,65 +100,70 @@
             <!-- CONTENT -->
             <div class="content">
                 <div class="card">
-                    <h2 class="form-title">Generación de Reportes</h2>
+                    <h2 class="form-title">Mantenimiento de Usuarios</h2>
                     <hr class="separator">
 
-                    <div class="form-grid">
+                    <form id="formUsuarios" class="form-grid">
                         <div class="input-group">
-                            <label>Tipo de Reporte</label>
-                            <select id="tipoReporte" onchange="cambiarInterfazFiltros()">
-                                <option value="VENTAS_FECHAS">Ventas por Rango de Fechas</option>
-                                <option value="STOCK_BAJO">Productos con Stock Bajo</option>
-                                <option value="MAS_VENDIDOS">Top 10 Productos Más Vendidos</option>
+                            <label for="codigo">Identificación</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="identificacion" placeholder="Número de identificación"
+                                    required maxlength="50">
+                                <button type="button" class="btn btn-search" onclick="buscarIdentificacion()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Rol</label>
+                            <select id="roleSelect" required>
+                                <option value="" disabled selected>Cargando roles...</option>
                             </select>
                         </div>
                     
-                        <div class="input-group" id="grupoFechaInicio">
-                            <label>Fecha Inicio</label>
-                            <input type="date" id="fechaInicio">
+                        <div class="input-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" placeholder="Ingrese el nombre del usuario"
+                                required maxlength="50">
                         </div>
                     
-                        <div class="input-group" id="grupoFechaFin">
-                            <label>Fecha Fin</label>
-                            <input type="date" id="fechaFin">
+                        <div class="input-group">
+                            <label for="correo">Correo electrónico</label>
+                            <input type="email" id="correo" placeholder="Ingrese el correo electrónico"
+                                required maxlength="150">
+                        </div>
+                        
+                        <div class="input-group password-group">
+                            <label for="contrasena">Contraseña</label>
+                            <input type="password" id="contrasena" placeholder="Contraseña">
+                            <i class="fa fa-eye toggle-password icon-right"></i>
+                        </div>
+                    
+                        <div class="input-group full-width">
+                            <label>Estado</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="estado" value="activo" checked> Activo
+                                </label>
+                                <label>
+                                    <input type="radio" name="estado" value="inactivo"> Inactivo
+                                </label>
+                            </div>
                         </div>
                     
                         <div class="button-container full-width">
-                            <button class="btn btn-save" onclick="generarReporte()">
-                                <i class="fa fa-file-alt"></i> Generar Reporte
+                            <button type="button" class="btn btn-save" onclick="guardarProducto()">
+                                <i class="fa fa-save"></i> Guardar
                             </button>
-                            <button class="btn btn-pdf" onclick="window.print()">
-                                <i class="fa fa-print"></i> Imprimir / PDF
+                            <button type="button" class="btn btn-delete" onclick="eliminarProducto()">
+                                <i class="fa fa-trash"></i> Eliminar
                             </button>
-                            <button class="btn btn-clear" onclick="limpiarFormulario()">
+                            <button type="reset" class="btn btn-clear">
                                 <i class="fa fa-eraser"></i> Limpiar
                             </button>
                         </div>
-                    </div>
-                </div>
-            
-                <div class="card">
-                    <div id="contenedorTablaReporte" class="table-container">
-                        <table class="table-moka" id="tablaReporte">
-                            <thead id="theadReporte">
-                                </thead>
-                            <tbody id="tbodyReporte">
-                                <tr><td colspan="100%" style="text-align:center;">Seleccione un reporte y presione generar</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="pagination-container" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-                        <button class="btn btn-clear" onclick="cambiarPagina(-1)" id="btnAnterior">
-                            <i class="fa fa-chevron-left"></i> Anterior
-                        </button>
-
-                        <span id="infoPagina" style="align-self: center; font-weight: bold;">Página 1</span>
-                        <button class="btn btn-clear" onclick="cambiarPagina(1)" id="btnSiguiente">
-                            Siguiente <i class="fa fa-chevron-right"></i>
-                        </button>
-                    </div>
-
+                    </form>
                 </div>
             </div>
 
@@ -207,7 +212,7 @@
     </div>
 
     <script src="js/config.js"></script>
-    <script src="js/reportes.js"></script>
+    <script src="js/usuarios.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
