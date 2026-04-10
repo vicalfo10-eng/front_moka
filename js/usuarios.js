@@ -17,6 +17,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // Evento para cargar los proveedores
     cargarRoles()
 
+        // Mostrar / ocultar contraseña
+    document.querySelectorAll(".toggle-password").forEach(icon => {
+
+        icon.addEventListener("click", () => {
+
+            const input = icon.previousElementSibling
+
+            if (input.type === "password") {
+
+                input.type = "text"
+                icon.classList.remove("fa-eye")
+                icon.classList.add("fa-eye-slash")
+            } else {
+
+                input.type = "password"
+                icon.classList.remove("fa-eye-slash")
+                icon.classList.add("fa-eye")
+            }
+
+        })
+
+    })
+
 })
 
 /* SIDEBAR COLLAPSE */
@@ -69,17 +92,26 @@ const getFormData = () => {
 
     return {
 
-        categoria: document.getElementById("roleSelect").value,
         identificacion: document.getElementById("identificacion").value.trim(),
+        rol: document.getElementById("roleSelect").value,
         nombre: document.getElementById("nombre").value.trim(),
         correo: document.getElementById("correo").value.trim(),
-        contrasena: document.getElementById("contrasena").value.trim()
+        contrasena: document.getElementById("contrasena").value.trim(),
+        estado: document.querySelector('input[name="estado"]:checked').value
     }
 }
 
 const limpiarFormulario = () => {
 
     document.getElementById("formUsuarios").reset()
+    
+    const inputContrasena = document.getElementById("contrasena")
+    inputContrasena.value = ""
+    inputContrasena.disabled = false
+    
+    const iconoOjo = document.querySelector(".toggle-password")
+    if (iconoOjo) iconoOjo.style.display = "block"
+
     editMode = false
 }
 
@@ -111,12 +143,74 @@ const cargarRoles = async () => {
     }
 }
 
-const guardarProducto = async () => {
+const buscarIdentificacion = async () => {
+
+    const idInput = document.getElementById("identificacion").value.trim()
+
+    if (!idInput) {
+        return Swal.fire({
+            title: "Información",
+            text: "La identificación del usuario es obligatoria.",
+            icon: "info",
+            confirmButtonColor: '#17a2b8'
+        })
+    }
+    
+    try {
+
+        // Llamada al API (Ajusta la URL según tu backend)
+        const response = await fetch(`${API_URL}/user_register?identificacion=${idInput}`)
+        const data = await response.json()
+
+        if (data.ok) {
+
+            document.getElementById("roleSelect").value = data.result.id_rol
+            document.getElementById("identificacion").value = data.result.identificacion
+            document.getElementById("nombre").value = data.result.nombre
+            document.getElementById("correo").value = data.result.correo
+            document.getElementById("contrasena").value = data.result.contrasena
+
+            const inputContrasena = document.getElementById("contrasena")
+            inputContrasena.disabled = true
+
+            const iconoOjo = document.querySelector(".toggle-password");
+            if (iconoOjo) {
+
+                iconoOjo.style.display = "none";
+            }
+
+            if (data.result.activo === 1) {
+                document.querySelector('input[name="estado"][value="activo"]').checked = true
+            } else {
+                document.querySelector('input[name="estado"][value="inactivo"]').checked = true
+            }
+
+            editMode = true // Activamos modo edición
+
+        } else {
+
+            editMode = false // No se encontró, modo nuevo registro
+
+            Swal.fire({
+                title: "Información",
+                text: data.result.msg,
+                icon: "info",
+                confirmButtonColor: '#17a2b8'
+            })
+
+            limpiarFormulario()
+        }
+    } catch (error) {
+
+        Swal.fire("Error", "Error al obtener el producto: " + error.message, "error")
+    }
+}
+
+const guardarUsuario = async () => {
 
     const getData = getFormData()
     const estadoNumerico = (getData.estado === "activo") ? 1 : 0
 
-    // Definimos los parámetros según el modo (Edición o Registro)
     const url = editMode ? `${API_URL}/user_update` : `${API_URL}/user_register`
     const metodo = editMode ? "PUT" : "POST"
     const mensaje = editMode ? "Actualización Exitosa" : "Registro Exitoso"
@@ -127,12 +221,13 @@ const guardarProducto = async () => {
             method: metodo,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                id_rol: getData.categoria,
+
                 identificacion: getData.identificacion,
+                id_rol: getData.rol,
                 nombre: getData.nombre,
                 correo: getData.correo,
                 contrasena: getData.contrasena,
-                estado: estadoNumerico
+                activo: estadoNumerico
             })
         })
         
@@ -171,30 +266,4 @@ const guardarProducto = async () => {
 
         Swal.fire("Error", "Error al registrar el producto: " + error.message, "error") 
     }
-}
-
-/**
- * Modal de confirmación genérico (Usando SweetAlert2)
- */
-const confirmarAccion = (mensaje, callback) => {
-
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: mensaje,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#e74c3c', // Morado MOKA
-        cancelButtonColor: '#95a5a6',
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar'
-
-    }).then((result) => {
-
-        if (result.isConfirmed) {
-            // Verificamos que el callback exista y sea una función
-            if (callback && typeof callback === 'function') {
-                callback()
-            }
-        }
-    })
 }

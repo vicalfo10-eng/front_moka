@@ -210,8 +210,8 @@ const buscarProducto = async () => {
 
         if (data.ok) {
 
-            document.getElementById("categorySelect").value = data.result.id_categoria;
-            document.getElementById("supplierSelect").value = data.result.id_proveedor;
+            document.getElementById("categorySelect").value = data.result.id_categoria
+            document.getElementById("supplierSelect").value = data.result.id_proveedor
             document.getElementById("nombre").value = data.result.nombre
             document.getElementById("precio").value = data.result.precio
             document.getElementById("impuesto").value = data.result.impuesto

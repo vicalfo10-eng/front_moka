@@ -53,6 +53,33 @@
     padding-right: 35px; /* Espacio para que el texto no pise la flecha */
 }
 
+/* Contenedor relativo para que el icono se posicione respecto al input */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.icon-right {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #888;
+    transition: 0.3s;
+    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.icon-right:hover {
+    color: var(--turquesa);
+}
+
 .full-width {
     grid-column: 1 / -1;
 }
