@@ -123,6 +123,10 @@ const getFormData = () => {
 const limpiarFormulario = () => {
 
     document.getElementById("formProductos").reset()
+
+    document.getElementById("stock").value = ""
+    document.getElementById("stock").disabled = false
+
     editMode = false
 }
 
@@ -192,6 +196,7 @@ const cargarProveedores = async () => {
 const buscarProducto = async () => {
 
     const idInput = document.getElementById("codigo").value.trim()
+    document.getElementById("stock").disabled = true
 
     if (!idInput) {
         return Swal.fire({
@@ -236,7 +241,11 @@ const buscarProducto = async () => {
                 icon: "info",
                 confirmButtonColor: '#17a2b8'
             })
+
+            document.getElementById("stock").value = ""
+            document.getElementById("stock").disabled = false
         }
+
     } catch (error) {
 
         Swal.fire("Error", "Error al obtener el producto: " + error.message, "error")
@@ -270,7 +279,8 @@ const guardarProducto = async () => {
                 impuesto: getData.impuesto,
                 stock: getData.stock,
                 stock_minimo: getData.stock_min,
-                activo: estadoNumerico
+                activo: estadoNumerico,
+                id_usuario: JSON.parse(localStorage.getItem("codigo"))
             })
         })
         
