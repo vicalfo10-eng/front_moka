@@ -260,3 +260,51 @@ const cambiarPagina = (delta) => {
         generarReporte(proximaPagina)
     }
 }
+
+const imprimirReporte = () => {
+
+    const tabla = document.getElementById("tablaReporte")
+    const titulo = document.getElementById("tipoReporte").options[document.getElementById("tipoReporte").selectedIndex].text
+    
+    if (!tabla || tabla.rows.length <= 1) {
+
+        Swal.fire({
+                title: "Atención",
+                text: "No hay datos en la tabla para imprimir.",
+                icon: "warning",
+                confirmButtonColor: '#df9848'
+        })
+        return
+    }
+
+    // Crear una ventana temporal
+    const ventanaImpresion = window.open('', '_blank')
+    
+    ventanaImpresion.document.write(`
+        <html>
+            <head>
+                <title>MOKA - Reporte</title>
+                <style>
+                    body { font-family: sans-serif; padding: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .header img { width: 80px; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h2>MOKA - Sistema de Inventario</h2>
+                    <h3>${titulo}</h3>
+                    <p>Fecha de generación: ${new Date().toLocaleDateString()}</p>
+                </div>
+                ${tabla.outerHTML}
+            </body>
+        </html>`
+    )
+
+    ventanaImpresion.document.close()
+    ventanaImpresion.print()
+    ventanaImpresion.close()
+}
