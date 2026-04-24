@@ -57,6 +57,7 @@ const getFormData = () => {
         nombre: document.getElementById("nombre").value.trim(),
         telefono: document.getElementById("telefono").value.trim(),
         correo: document.getElementById("correo").value.trim(),
+        direccion: document.getElementById("direccion").value.trim(),
         estado: document.querySelector('input[name="estado"]:checked').value
     }
 }
@@ -94,7 +95,7 @@ const buscarCliente = async () => {
             document.getElementById("nombre").value = data.result.nombre;
             document.getElementById("telefono").value = data.result.telefono;
             document.getElementById("correo").value = data.result.correo;
-
+            document.getElementById("direccion").value = data.result.direccion;
             if (data.result.activo === 1) {
                 document.querySelector('input[name="estado"][value="activo"]').checked = true;
             } else {
@@ -143,6 +144,7 @@ const guardarCliente = async () => {
                 nombre: getData.nombre,
                 telefono: getData.telefono,
                 correo: getData.correo,
+                direccion: getData.direccion,
                 activo: estadoNumerico
             })
         })
