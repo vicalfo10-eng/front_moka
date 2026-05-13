@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Evento para cargar los proveedores
     cargarClientes()
+    cargarPlanCredito()
 
 })
 
@@ -86,6 +87,54 @@ const cargarClientes = async () => {
     } catch (error) {
         console.error("Error cargando clientes:", error)
         select.innerHTML = '<option value="">Error al cargar clientes</option>'
+    }
+}
+
+const cargarPlanCredito = async () => {
+
+    const select = document.getElementById("configCreditSelect")
+
+    try {
+
+        const response = await fetch(`${API_URL}/credit_configuration`)
+        const data = await response.json()
+
+        if (!response.ok) {
+            throw new Error("No se pudieron cargar los planes de crédito")
+        }
+
+        select.innerHTML = '<option value="">Seleccione un plan de crédito</option>'
+
+        data.creditConfiguration.forEach(credit => {
+            const option = document.createElement("option")
+            option.value = credit.id_config
+            option.textContent = credit.nombre_plan
+            select.appendChild(option)
+        })
+
+    } catch (error) {
+        console.error("Error cargando los planes de crédito:", error)
+        select.innerHTML = '<option value="">Error al cargar los planes de crédito</option>'
+    }
+}
+
+const toggleCreditOptions = () => {
+
+    const tipoPago = document.getElementById('tipoPago').value
+    const seccionCredito = document.getElementById('seccionCredito')
+    const fechaInput = document.getElementById('fechaPrimerPago')
+
+    if (tipoPago === 'CREDITO') {
+        seccionCredito.style.display = 'block'
+        
+        const hoy = new Date().toISOString().split('T')[0]
+        fechaInput.value = hoy
+
+    } else {
+
+        seccionCredito.style.display = 'none'
+        document.getElementById('idConfigCredito').value = ""
+        fechaInput.value = ""
     }
 }
 
@@ -285,6 +334,9 @@ const procesarVenta = async () => {
 
     const idCliente = document.getElementById("customerSelect").value
     const idUsuario = JSON.parse(localStorage.getItem("codigo"))
+    const tPago = document.getElementById('tipoPago').value
+    const idConfig = document.getElementById('configCreditSelect').value
+    const fPrimerPago = document.getElementById('fechaPrimerPago').value
     const btnVenta = document.querySelector(".btn-finish")
 
     if (!idCliente) {
@@ -315,6 +367,9 @@ const procesarVenta = async () => {
 
         id_usuario: idUsuario,
         id_cliente: parseInt(idCliente),
+        tipo_pago: tPago,
+        id_config: idConfig,
+        fecha_primer_pago: fPrimerPago,
         detalles: carrito.map(item => {
             // Función interna para asegurar 2 decimales numéricos
             const clean = (num) => Number(parseFloat(num).toFixed(2));

@@ -48,6 +48,7 @@
                 </div>
 
                 <div class="submenu">
+                    <a href="cxc.html">Cuentas por Cobrar</a>
                     <a href="inventario.html">Inventario</a>
                     <a href="ventas.html">Ventas</a>
                 </div>
@@ -106,15 +107,40 @@
                     <div class="form-grid">
                         <div class="form-grid grid-ventas-layout">
                             <div class="card card-agregar">
-                                <h2 class="form-title">Agregar Productos</h2>
+                                <h2 class="form-title">Información de Venta</h2>
                                 <hr class="separator">
 
                                 <div class="input-group">
-                                    <label>Cliente</label>
+                                    <label><i class="fa fa-user"></i> Cliente</label>
                                     <select id="customerSelect"></select>
                                 </div>
+
+                                <div class="input-group mt-15">
+                                    <label><i class="fa fa-credit-card"></i> Condición de Pago</label>
+                                    <select id="tipoPago" onchange="toggleCreditOptions()">
+                                        <option value="CONTADO">Contado</option>
+                                        <option value="CREDITO">Crédito</option>
+                                    </select>
+                                </div>
+
+                                <div id="seccionCredito" class="credit-section-container">
+                                    <div class="input-group">
+                                        <label><i class="fa fa-list-ol"></i> Plan de Crédito</label>
+                                        <select id="configCreditSelect"></select>
+                                    </div>
+                                
+                                    <div class="input-group">
+                                        <label><i class="fa fa-calendar-alt"></i> Fecha Primer Pago</label>
+                                        <input type="date" id="fechaPrimerPago">
+                                    </div>
+                                
+                                    <div id="previewCuotas" class="credit-info-text">
+                                        <i class="fa fa-info-circle"></i> 
+                                        <span>Las cuotas se calcularán según el plan seleccionado.</span>
+                                    </div>
+                                </div>
                             
-                                <br>
+                                <br><hr class="separator"><br>
                             
                                 <div class="form-grid grid-busqueda">
                                     <div class="input-group">
@@ -183,6 +209,7 @@
 
                     <div class="footer-column">
                         <h4>Procesos</h4>
+                            <a href="cxc.html">Cuentas por Cobrar</a>
                             <a href="inventario.html">Inventario</a>
                             <a href="ventas.html">Ventas</a>
                     </div>
@@ -238,7 +265,10 @@
                 <div class="ticket-info">
                     <p><strong>Cliente:</strong> <span id="facturaCliente"></span></p>
                     <p><strong>Vendedor:</strong> <span id="facturaVendedor"></span></p>
+                    <p><strong>Condición:</strong> <span id="facturaCondicion">CONTADO</span></p>
+                    <p id="infoVencimientoTicket" style="display:none;"><strong>Vence:</strong> <span id="facturaVencimiento"></span></p>
                 </div>
+                
                 <div class="ticket-divider"></div>
 
                 <table class="ticket-table">

@@ -182,7 +182,7 @@ const cargarProveedores = async () => {
             option.value = proveedor.id_proveedor
             option.textContent = proveedor.nombre
             select.appendChild(option)
-        });
+        })
 
     } catch (error) {
         console.error("Error cargando proveedores:", error)

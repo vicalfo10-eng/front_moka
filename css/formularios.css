@@ -431,3 +431,34 @@ table tbody tr:hover {
 .hidden {
     display: none !important;
 }
+
+/* Contenedor dinámico de crédito */
+.credit-section-container {
+    display: none; /* Se activa vía JS */
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px dashed #2c3e50;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Espaciado interno para grupos dentro del crédito */
+.credit-section-container .input-group + .input-group {
+    margin-top: 10px;
+}
+
+/* Estilo para la leyenda informativa o preview */
+.credit-info-text {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Utilidad para margen superior */
+.mt-15 {
+    margin-top: 15px;
+}
