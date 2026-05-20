@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MOKA | Sistema de Inventario</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <!-- LOGO -->
+            <div class="logo-container">
+                <div class="logo-left">
+                    <a href="dashboard.html"><img src="assets/img2.jpeg"></a>
+                    <span class="logo-text">MOKA</span>
+                </div>
+            
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <!-- MENU -->
+            <nav class="menu">
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-cogs"></i>
+                    <span>Mantenimientos</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="categorias.html">Categorías</a>
+                    <a href="clientes.html">Clientes</a>
+                    <a href="productos.html">Productos</a>
+                    <a href="proveedores.html">Proveedores</a>
+                    <a href="usuarios.html">Usuarios</a>
+                </div>
+
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-sync"></i>
+                    <span>Procesos</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="cxc.html">Cuentas por Cobrar</a>
+                    <a href="inventario.html">Inventario</a>
+                    <a href="ventas.html">Ventas</a>
+                </div>
+
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-chart-bar"></i>
+                    <span>Reportes</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="reportes.html">Ver reportes</a>
+                </div>
+
+                <div class="menu-item" onclick="toggleMenu(this)">
+                    <i class="fa fa-building"></i>
+                    <span>Acerca de</span>
+                    <i class="fa fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="submenu">
+                    <a href="acercade.html">Nuestra empresa</a>
+                </div>
+                
+                <div class="user-bottom">
+                    <div class="menu-item" onclick="toggleMenu(this)">
+                        <i class="fa fa-user-circle"></i>
+                        <span id="nombreUsuario">Usuario</span>
+                        <i class="fa fa-chevron-down arrow"></i>
+                    </div>
+                
+                    <div class="submenu">
+                        <a href="#" onclick="logout()">
+                            <i class="fa fa-sign-out-alt"></i>
+                            Cerrar sesión
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">     
+            <!-- TOPBAR -->
+            <header class="topbar">
+                Bienvenido,
+                <strong id="nombreUsuarioTop">Usuario</strong>
+            </header>
+
+            <!-- CONTENT -->
+            <section class="content">
+                <header class="page-header">
+                    <h1 class="form-title"><i class="fa fa-hand-holding-dollar"></i> Cuentas por Cobrar</h1>
+                    <p class="subtitle">Gestión de saldos, cuotas y abonos de clientes</p>
+                </header>
+            
+                <div class="card search-card-cxc">
+                    <div class="row-filters">
+                        <div class="input-group flex-1">
+                            <label><i class="fa fa-user icon-accent"></i> Cliente</label>
+                            <div class="search-input-group">
+                                <select id="customerSelect" class="form-control">
+                                    <option value="">Todos los clientes</option>
+                                </select>
+                                <button class="btn-search-action" onclick="buscarCuentas()" title="Buscar Cliente">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <div class="input-group w-200">
+                            <label><i class="fa fa-file-invoice icon-accent"></i> # Factura</label>
+                            <div class="search-input-group">
+                                <input type="text" id="searchFactura" class="form-control" placeholder="Buscar factura...">
+                                <button class="btn-search-action" onclick="buscarCuentas()" title="Buscar Factura">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <div class="input-group w-150">
+                            <label>Estado</label>
+                            <select id="filterEstado" class="form-control" onchange="buscarCuentas()">
+                                <option value="PENDIENTE">Pendientes</option>
+                                <option value="CANCELADO">Canceladas</option>
+                                <option value="TODOS">Ver todas</option>
+                            </select>
+                        </div>
+                    
+                        <button class="btn-refresh" title="Refrescar Lista" onclick="buscarCuentas()">
+                            <i class="fa fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            
+                <div class="cxc-main-grid hidden-detail" id="cxcGrid">
+                    <div class="card table-card-cxc">
+                        <div class="card-header-simple">
+                            <h3>Cuentas Activas</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="table-moka">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Factura</th>
+                                        <th>Cliente</th>
+                                        <th class="text-right">Total</th>
+                                        <th class="text-right">Saldo</th>
+                                        <th class="text-center">Estado</th>
+                                        <th class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cxcBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center placeholder-text">
+                                            <i class="fa fa-search fa-2x"></i>
+                                            <p>Use los filtros superiores para buscar cuentas</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                
+                    <div id="detalleCuentaContainer" class="card card-detail-cxc hidden">
+                        <div class="header-accent-cxc">
+                            <h3><i class="fa fa-money-bill-wave"></i> Pagos Factura #<span id="txtFacturaSeleccionada">0</span></h3>
+                            <button class="btn-close-detail" onclick="cerrarDetalle()">&times;</button>
+                        </div>
+                        
+                        <div class="summary-balance-box">
+                            <div class="summary-info">
+                                <span class="label">Saldo Pendiente</span>
+                                <strong id="saldoPendienteTxt" class="text-danger">₡0.00</strong>
+                            </div>
+                            <div class="summary-info">
+                                <span class="label">Próximo Vence</span>
+                                <strong id="proximoVenceTxt">--/--/--</strong>
+                            </div>
+                        </div>
+
+                        <div class="table-container-mini">
+                            <table class="table-moka small-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cuota</th>
+                                        <th>Vence</th>
+                                        <th class="text-right">Monto</th>
+                                        <th class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="planPagosBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER AQUI DENTRO -->
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-column">
+                        <h4>Mantenimientos</h4>
+                            <a href="categorias.html">Categorías</a>
+                            <a href="clientes.html">Clientes</a>
+                            <a href="productos.html">Productos</a>
+                            <a href="proveedores.html">Proveedores</a>
+                            <a href="usuarios.html">Usuarios</a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Procesos</h4>
+                            <a href="cxc.html">Cuentas por Cobrar</a>
+                            <a href="inventario.html">Inventario</a>
+                            <a href="ventas.html">Ventas</a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Reportes</h4>
+                        <a href="reportes.html">Inventario</a>
+                        <a href="reportes.html">Ventas</a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Contacto</h4>
+                            <a href="https://api.whatsapp.com/send?phone=50685776011" target="_blank"><p><i class="fab fa-whatsapp"></i> (506) 85776011</p></a>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>Redes Sociales</h4>
+                            <a href="https://www.facebook.com/share/1ALB4ztb7T/?mibextid=wwXIfr" target="_blank"><p><i class="fab fa-facebook"></i> Facebook</p></a>
+                            <a href="https://www.instagram.com/moka_.creacionesconamor?igsh=Zml5ODNkMGF3cHU%3D&utm_source=qr" target="_blank"><p><i class="fab fa-instagram"></i> Instagram</p></a>
+                            <a href="https://www.tiktok.com/@moka.creaciones.co?_r=1&_t=ZS-93uh4b1ULBI" target="_blank"><p><i class="fab fa-tiktok"></i> TikTok</p></a>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    MOKA © 2026 — Todos los derechos reservados
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/cxc.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+
+<div id="modalFactura" class="modal-factura-overlay">
+        <div class="modal-factura-content">
+            <div id="ticket-print-area" class="ticket-container">
+                <div class="ticket-header text-center">
+                    <img src="assets/img2.jpeg" style="width: 60px; border-radius: 50%;">
+                    <h1>MOKA</h1>
+                    <p>Creaciones con Amor</p>
+                    <p>Alajuela, Costa Rica</p>
+                    <p>Tel: (506) 8577-6011</p>
+                    <div class="ticket-divider"></div>
+                    <p><strong>FACTURA #<span id="facturaNumero">000000</span></strong></p>
+                    <p id="facturaFecha"></p>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="ticket-info">
+                    <p><strong>Cliente:</strong> <span id="facturaCliente"></span></p>
+                    <p><strong>Vendedor:</strong> <span id="facturaVendedor"></span></p>
+                    <p><strong>Condición:</strong> <span id="facturaCondicion">CONTADO</span></p>
+                    <p id="infoPrimerPagoTicket" style="display:none;"><strong>Primer Pago:</strong> <span id="facturaPrimerPago"></span></p>
+                    <p id="infoVencimientoTicket" style="display:none;"><strong>Fecha Vence:</strong> <span id="facturaVencimiento"></span></p>
+                </div>
+                
+                <div class="ticket-divider"></div>
+
+                <table class="ticket-table">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Código</th>
+                            <th class="text-left">Can/Des</th>
+                            <th class="text-left">Total</th>
+                        </tr>
+
+                        <tr>
+                            <th class="text-left">Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facturaDetalleBody">
+                        </tbody>
+                </table>
+
+                <div class="ticket-divider"></div>
+                <div class="ticket-totals">
+                    <div class="total-row">
+                        <span>SUBTOTAL:</span>
+                        <span id="facturaSubtotal"></span>
+                    </div>
+
+                    <div class="total-row">
+                        <span>DESCUENTO:</span>
+                        <span id="facturaDescuento"></span>
+                    </div>
+
+                    <div class="total-row">
+                        <span>IMPUESTOS:</span>
+                        <span id="facturaImpuestos"></span>
+                    </div>
+
+                    <div class="total-row total-final">
+                        <span>TOTAL:</span>
+                        <span id="facturaTotal"></span>
+                    </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+                <p class="text-center">¡Gracias por su compra!</p>
+                <p class="text-center" style="font-size: 10px;">MOKA © 2026</p>
+            </div>
+
+            <div class="modal-factura-actions no-print">
+                <button class="btn-ticket-print" onclick="window.print()">
+                    <i class="fa fa-print"></i> Imprimir / Exportar PDF
+                </button>
+
+                <button class="btn-ticket-close no-print" onclick="document.getElementById('modalFactura').style.display='none'" style="width: 100%;">
+                    Cerrar Vista Previa
+                </button>
+            </div>
+        </div>
+    </div>
+</html>
