@@ -511,6 +511,8 @@ const mostrarTicket = async (idVenta) => {
             lblVencimiento.innerText = "Error al cargar"
         }
     } else {
+        
+        divPrimerPago.style.display = "none"
         divVencimiento.style.display = "none"
     }
 
