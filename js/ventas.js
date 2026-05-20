@@ -440,8 +440,14 @@ const procesarVenta = async () => {
     }
 }
 
-const mostrarTicket = (idVenta) => {
+const mostrarTicket = async (idVenta) => {
+    
     const f = (num) => num.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+    // Obtener valores de la interfaz actual
+    const tPago = document.getElementById('tipoPago').value
+    const fPago = document.getElementById('fechaPrimerPago').value
+    const fPrimerPago = new Date(fPago)
     
     // Asignar el ID de venta real (puedes formatearlo con ceros a la izquierda)
     document.getElementById("facturaNumero").innerText = String(idVenta).padStart(6, '0')
@@ -455,8 +461,58 @@ const mostrarTicket = (idVenta) => {
         second: '2-digit',
         hour12: true
     })
+     
     document.getElementById("facturaCliente").innerText = document.getElementById("customerSelect").options[document.getElementById("customerSelect").selectedIndex].text
     document.getElementById("facturaVendedor").innerText = document.getElementById("nombreUsuarioTop").innerText
+
+    // NUEVO: Lógica de Condición de Pago en el Ticket ---
+    const lblCondicion = document.getElementById('facturaCondicion')
+    const divPrimerPago = document.getElementById('infoPrimerPagoTicket')
+    const lblPrimerPago = document.getElementById('facturaPrimerPago')
+    const divVencimiento = document.getElementById('infoVencimientoTicket')
+    const lblVencimiento = document.getElementById('facturaVencimiento')
+
+    lblCondicion.innerText = tPago // Pintará CONTADO o CREDITO
+
+    if (tPago === 'CREDITO') {
+
+        divPrimerPago.style.display = "block"
+        divVencimiento.style.display = "block"
+
+        fPrimerPago.setMinutes(fPrimerPago.getMinutes() + fPrimerPago.getTimezoneOffset())
+        lblPrimerPago.innerText = fPrimerPago.toLocaleDateString('es-CR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+
+        try {
+
+            const response = await fetch(`${API_URL}/sales_expirationdate?id_venta=${idVenta}`)
+            const data = await response.json()
+
+            if (data.result.ok && data.result.fecha_vencimiento) {
+
+                const fechaFinal = new Date(data.result.fecha_vencimiento)
+                
+                fechaFinal.setMinutes(fechaFinal.getMinutes() + fechaFinal.getTimezoneOffset())
+
+                lblVencimiento.innerText = fechaFinal.toLocaleDateString('es-CR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                })
+
+            } else {
+                lblVencimiento.innerText = "No definida"
+            }
+        } catch (error) {
+            console.error("Error al obtener fecha de vencimiento:", error)
+            lblVencimiento.innerText = "Error al cargar"
+        }
+    } else {
+        divVencimiento.style.display = "none"
+    }
 
     const body = document.getElementById("facturaDetalleBody")
     body.innerHTML = ""
