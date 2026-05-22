@@ -61,9 +61,20 @@ const logout = () => {
 
 }
 
+const formatearMoneda = (valor) => {
+
+    if (valor === null || valor === undefined) return "0,00"
+    
+    return new Intl.NumberFormat('fr-FR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(valor).replace(/\u00a0/g, ' ')
+
+}
+
 const cargarClientes = async () => {
 
-    const select = document.getElementById("customerSelect")
+    const select = document.getElementById("searchCustomer")
 
     try {
 
@@ -89,44 +100,78 @@ const cargarClientes = async () => {
     }
 }
 
-// Buscar cuentas según filtros
 const buscarCuentas = async () => {
 
-    const customerId = document.getElementById("searchCustomer").value
-    const invoiceNum = document.getElementById("searchFactura").value
-    const status = document.getElementById("filterEstado").value
+    const customerId = document.getElementById("searchCustomer").value.trim() || 0
+    const invoiceNum = document.getElementById("searchFactura").value.trim() || 0
+
+    if (!customerId && !invoiceNum) {
+
+        return Swal.fire({
+            title: "Información",
+            text: "Ingrese un número de factura o seleccione un cliente.",
+            icon: "info",
+            confirmButtonColor: '#17a2b8'
+        })
+    }
 
     try {
 
-        const response = await fetch(`${API_URL}/receivables/search?customerId=${customerId}&invoice=${invoiceNum}&status=${status}`)
+        const response = await fetch(`${API_URL}/receivables/search?id_cliente=${customerId}&id_venta=${invoiceNum}`)
         const data = await response.json()
-        renderReceivablesTable(data)
+
+        if (data.ok === 1) {
+
+            const listaCuentas = data.accounts
+
+            dibujarTablaCuentas(listaCuentas)
+            document.getElementById("countResults").innerText = `${listaCuentas.length} Facturas`
+
+            if (invoiceNum && invoiceNum.toString().trim() !== "" && listaCuentas.length === 1) {
+
+                const facturaUnica = listaCuentas[0]
+                verDetalleCuotas(facturaUnica.id, facturaUnica.invoice_number, facturaUnica.current_balance)
+                
+            } else {
+                cerrarDetalle()
+            }
+
+        } else {
+
+            dibujarTablaCuentas([])
+            document.getElementById("countResults").innerText = `0 Facturas`
+            cerrarDetalle()
+            
+            if (data.status === 404) {
+                console.log("Información:", data.msg)
+            }
+        }
 
     } catch (error) {
-        console.error("Error searching receivables:", error)
+        console.error("Error técnico:", error)
+        Swal.fire("Error", "No se pudo completar la búsqueda", "error")
     }
 }
 
-const renderReceivablesTable = (accounts) => {
+const dibujarTablaCuentas = (accounts) => {
 
     const tbody = document.getElementById("cxcBody")
     tbody.innerHTML = ""
 
     if (accounts.length === 0) {
 
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center">No se encontraron cuentas</td></tr>`
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center">No se encontraron cuentas.</td></tr>`
         return
     }
 
     accounts.forEach(acc => {
-
         const tr = document.createElement("tr")
         tr.innerHTML = `
             <td class="text-center">${acc.invoice_number}</td>
             <td>${acc.customer_name}</td>
-            <td class="text-right">₡${acc.total_amount.toLocaleString()}</td>
-            <td class="text-right text-danger"><strong>₡${acc.current_balance.toLocaleString()}</strong></td>
-            <td class="text-center"><span class="badge ${acc.status === 'PENDIENTE' ? 'badge-active' : 'badge-inactive'}">${acc.status}</span></td>
+            <td class="text-center">₡${formatearMoneda(parseFloat(acc.total_amount))}</td>
+            <td class="text-center">₡${formatearMoneda(parseFloat(acc.current_balance))}</td>
+            <td class="text-center">${acc.status_text}</td>
             <td class="text-center">
                 <button class="btn-table" onclick="verDetalleCuotas('${acc.id}', '${acc.invoice_number}', ${acc.current_balance})" title="Ver Abonos">
                     <i class="fa fa-eye"></i>
@@ -134,84 +179,176 @@ const renderReceivablesTable = (accounts) => {
             </td>
         `
         tbody.appendChild(tr)
-
     })
 }
 
 const verDetalleCuotas = async (receivableId, invoiceNum, balance) => {
 
-    document.getElementById("txtFacturaSeleccionada").innerText = invoiceNum
-    document.getElementById("saldoPendienteTxt").innerText = `₡${balance.toLocaleString()}`
+    const txtFactura = document.getElementById("txtFacturaSeleccionada")
+    const txtSaldo = document.getElementById("saldoPendienteTxt")
     
-    // Cambiar layout para mostrar detalle
-    document.getElementById("cxcGrid").classList.remove("hidden-detail")
+    if(txtFactura) txtFactura.innerText = invoiceNum
+    if(txtSaldo) txtSaldo.innerText = `₡${formatearMoneda(parseFloat(balance))}`
+    
+    // Mostrar el contenedor de detalle (Card derecha)
     document.getElementById("detalleCuentaContainer").classList.remove("hidden")
 
     try {
 
-        const response = await fetch(`${API_URL}/receivables/installments/${receivableId}`)
+        const response = await fetch(`${API_URL}/receivables/installments?id_cxc=${receivableId}`)
         const installments = await response.json()
-        renderInstallmentsTable(installments)
+
+        dibujarTablaCuotas(installments)
 
     } catch (error) {
-        console.error("Error loading installments:", error)
+
+        console.error("Error al cargar cuotas:", error)
     }
 }
 
-const renderInstallmentsTable = (installments) => {
+const dibujarTablaCuotas = (data) => {
 
-    const tbody = document.getElementById("planPagosBody")
+    const listaCuotas = data.quotas
+
+    const tbody = document.getElementById("cuotasBody")
+
+    if(!tbody) return
     tbody.innerHTML = ""
 
-    installments.forEach(inst => {
+    listaCuotas.forEach(inst => {
+
         const tr = document.createElement("tr")
+
         tr.innerHTML = `
-            <td>Cuota ${inst.installment_number}</td>
-            <td>${inst.due_date}</td>
-            <td class="text-right">₡${inst.amount.toLocaleString()}</td>
+            <td class="text-center">${inst.numero_cuota}</td>
+            <td class="text-center">${new Date(inst.due_date).toLocaleDateString('es-CR')}</td>
+            <td class="text-center">₡${formatearMoneda(parseFloat(inst.amount))}</td>
             <td class="text-center">
-                ${inst.status === 'PENDIENTE' ? 
-                    `<button class="btn-pay-cuota" onclick="confirmarCobro('${inst.id}', ${inst.amount}, '${inst.receivable_id}')">
-                        <i class="fa fa-cash-register"></i> Cobrar
+                <span class="badge ${inst.status_text === 'PAGADA' ? 'badge-active' : 'badge-inactive'}">
+                    ${inst.status_text}
+                </span>
+            </td>
+            <td class="text-center">
+                ${inst.status_text !== 'PAGADA' ? 
+                    `<button class="btn-table" title="Cobrar Cuota" 
+                        onclick="confirmarCobro('${inst.id_cuota}', ${inst.amount}, '${inst.id_cxc}')">
+                        <i class="fa fa-cash-register"></i>
                     </button>` : 
-                    `<span class="text-success"><i class="fa fa-check-circle"></i> Pagado</span>`
+                    `<i class="fa fa-check-circle text-success" title="Pagado"></i>`
                 }
             </td>
         `
         tbody.appendChild(tr)
-
     })
 }
 
-// Función principal para procesar el pago (Flexible)
 const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
+    const sugeridoFormateado = formatearMoneda(parseFloat(suggestedAmount))
 
-    const { value: amountPaid } = await Swal.fire({
+    const { value: formValues } = await Swal.fire({
         title: 'Registrar Pago de Cuota',
-        text: `Monto sugerido: ₡${suggestedAmount.toLocaleString()}`,
-        input: 'number',
-        inputLabel: 'Monto recibido del cliente',
-        inputValue: suggestedAmount,
+        html: `
+            <div style="margin-bottom: 15px; text-align: center;">
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">Monto sugerido:</p>
+                <strong style="font-size: 1.2rem; color: var(--morado);">₡${sugeridoFormateado}</strong>
+            </div>
+
+            <div style="text-align: left; width: 85%; margin: 0 auto;">
+                <label style="font-weight:600; display:block; margin-bottom:5px; color: #444;">Monto recibido:</label>
+                <input id="swal-input-monto" type="number" step="0.01" class="swal2-input" 
+                    value="${suggestedAmount}" 
+                    style="text-align: center; font-weight: bold; margin: 0 0 15px 0; width: 100%; border-radius: 8px;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label style="font-weight:600; display:block; margin-bottom:5px; color: #444;">Método:</label>
+                        <select id="swal-input-metodo" class="swal2-input" style="margin: 0; width: 100%; border-radius: 8px; font-size: 0.9rem;">
+                            <option value="EFECTIVO">Efectivo</option>
+                            <option value="TRANSFERENCIA">Transferencia</option>
+                            <option value="SINPE">Sinpe Móvil</option>
+                            <option value="TARJETA">Tarjeta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-weight:600; display:block; margin-bottom:5px; color: #444;">Comprobante:</label>
+                        <input id="swal-input-comprobante" type="text" class="swal2-input" placeholder="Opcional" style="margin: 0; width: 100%; border-radius: 8px; font-size: 0.9rem;">
+                    </div>
+                </div>
+            </div>
+        `,
+        focusConfirm: false,
         showCancelButton: true,
         confirmButtonColor: '#00B3A4',
-        confirmButtonText: 'Procesar Pago',
+        cancelButtonColor: '#95a5a6',
+        confirmButtonText: '<i class="fa fa-cash-register"></i> Procesar Pago',
         cancelButtonText: 'Cancelar',
-        inputValidator: (value) => {
-            if (!value || value <= 0) return 'Debe ingresar un monto válido'
+        target: document.querySelector('.main'),
+        
+        preConfirm: () => {
+            const monto = document.getElementById('swal-input-monto').value
+            const metodo = document.getElementById('swal-input-metodo').value
+            if (!monto || monto <= 0) {
+                Swal.showValidationMessage('Debe ingresar un monto válido')
+                return false
+            }
+            return { monto: parseFloat(monto), metodo: metodo }
+        },
+
+        didOpen: () => {
+            const inputMonto = document.getElementById('swal-input-monto')
+            const selectMetodo = document.getElementById('swal-input-metodo')
+            
+            // Aplicar estilos al select para que coincida con MOKA
+            Object.assign(selectMetodo.style, {
+                fontSize: '1rem',
+                fontFamily: "'Poppins', sans-serif",
+                color: '#444',
+                padding: '0 10px',
+                border: '1px solid #ddd',
+                height: '45px',
+                outline: 'none',
+                boxShadow: 'none'
+            })
+
+            // Visor dinámico centrado
+            const preview = document.createElement('div')
+            Object.assign(preview.style, {
+                marginTop: '15px',
+                padding: '10px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                textAlign: 'center',
+                border: '1px solid #eee'
+            })
+
+            preview.id = 'live-amount-preview'
+            preview.innerHTML = `Monto a procesar: <strong style="color: #28a745;">₡${sugeridoFormateado}</strong>`
+            inputMonto.parentElement.parentElement.appendChild(preview)
+
+            inputMonto.addEventListener('input', (e) => {
+                const valorActual = parseFloat(e.target.value) || 0
+                preview.innerHTML = `Monto a procesar: <strong style="color: #28a745;">₡${formatearMoneda(valorActual)}</strong>`
+            })
         }
     })
 
-    if (amountPaid) {
-
+    if (formValues) {
         try {
+            Swal.fire({
+                title: 'Procesando...',
+                didOpen: () => Swal.showLoading(),
+                target: document.querySelector('.main')
+            })
 
             const response = await fetch(`${API_URL}/payments/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    installment_id: installmentId,
                     receivable_id: receivableId,
-                    amount: parseFloat(amountPaid),
+                    installment_id: installmentId,
+                    amount: formValues.monto,
+                    payment_method: formValues.metodo,
                     date: new Date().toISOString().split('T')[0]
                 })
             })
@@ -219,14 +356,31 @@ const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
             const result = await response.json()
 
             if (result.success) {
-
-                Swal.fire('¡Éxito!', 'Pago registrado y saldo actualizado.', 'success')
-                imprimirComprobanteAbono(result.payment_data)
+                await Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'Pago registrado y saldo actualizado.',
+                    icon: 'success',
+                    confirmButtonColor: '#00B3A4',
+                    target: document.querySelector('.main')
+                })
+                
+                if (typeof imprimirComprobanteAbono === 'function') {
+                    imprimirComprobanteAbono(result.payment_data)
+                }
+                
                 buscarCuentas()
                 cerrarDetalle()
+            } else {
+                throw new Error(result.message || 'Error en el servidor')
             }
         } catch (error) {
-            Swal.fire('Error', 'No se pudo procesar el pago.', 'error')
+            console.error("Error al cobrar:", error)
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo procesar el pago. Intente de nuevo.',
+                icon: 'error',
+                target: document.querySelector('.main')
+            })
         }
     }
 }
@@ -237,19 +391,35 @@ const imprimirComprobanteAbono = (data) => {
     document.getElementById("facturaFecha").innerText = data.date
     document.getElementById("facturaCliente").innerText = data.customer_name
     document.getElementById("facturaReferencia").innerText = data.invoice_ref
-    document.getElementById("facturaTotal").innerText = `₡${data.amount_paid.toLocaleString()}`
-    document.getElementById("facturaSaldoRestante").innerText = `₡${data.new_balance.toLocaleString()}`
+    document.getElementById("facturaTotal").innerText = `₡${formatearMoneda(parseFloat(data.amount_paid))}`
+    document.getElementById("facturaSaldoRestante").innerText = `₡${formatearMoneda(parseFloat(data.new_balance))}`
 
     document.getElementById("modalFactura").style.display = "flex"
 }
 
 const cerrarDetalle = () => {
 
-    document.getElementById("cxcGrid").classList.add("hidden-detail")
-    document.getElementById("detalleCuentaContainer").classList.add("hidden")
+    const container = document.getElementById("detalleCuentaContainer")
+    if (container) {
+        container.classList.add("hidden")
+    }
 }
 
 const cerrarModal = () => {
 
     document.getElementById("modalFactura").style.display = "none"
+}
+
+const limpiarFiltros = () => {
+
+    document.getElementById("searchCustomer").value = ""
+    document.getElementById("searchFactura").value = ""
+
+    const tbody = document.getElementById("cxcBody")
+    tbody.innerHTML = ""
+
+    const countResults = document.getElementById("countResults")
+    if (countResults) countResults.innerText = "0 Facturas"
+
+    cerrarDetalle()
 }

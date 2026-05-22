@@ -100,109 +100,88 @@
 
             <!-- CONTENT -->
             <section class="content">
-                <header class="page-header">
+                <header class="page-header header-margin">
                     <h1 class="form-title"><i class="fa fa-hand-holding-dollar"></i> Cuentas por Cobrar</h1>
-                    <p class="subtitle">Gestión de saldos, cuotas y abonos de clientes</p>
                 </header>
             
-                <div class="card search-card-cxc">
-                    <div class="row-filters">
-                        <div class="input-group flex-1">
-                            <label><i class="fa fa-user icon-accent"></i> Cliente</label>
-                            <div class="search-input-group">
-                                <select id="customerSelect" class="form-control">
-                                    <option value="">Todos los clientes</option>
-                                </select>
-                                <button class="btn-search-action" onclick="buscarCuentas()" title="Buscar Cliente">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    
-                        <div class="input-group w-200">
-                            <label><i class="fa fa-file-invoice icon-accent"></i> # Factura</label>
-                            <div class="search-input-group">
-                                <input type="text" id="searchFactura" class="form-control" placeholder="Buscar factura...">
-                                <button class="btn-search-action" onclick="buscarCuentas()" title="Buscar Factura">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    
-                        <div class="input-group w-150">
-                            <label>Estado</label>
-                            <select id="filterEstado" class="form-control" onchange="buscarCuentas()">
-                                <option value="PENDIENTE">Pendientes</option>
-                                <option value="CANCELADO">Canceladas</option>
-                                <option value="TODOS">Ver todas</option>
+                <div class="grid-cxc-layout">
+                    <aside class="filters-panel">
+                        <h3 class="panel-subtitle">Buscador</h3>
+                        
+                        <div class="input-group">
+                            <label><i class="fa fa-user"></i> Cliente</label>
+                            <select id="searchCustomer" class="form-control">
+                                <option value="">Todos los clientes</option>
                             </select>
                         </div>
                     
-                        <button class="btn-refresh" title="Refrescar Lista" onclick="buscarCuentas()">
-                            <i class="fa fa-sync-alt"></i>
+                        <div class="input-group">
+                            <label><i class="fa fa-file-invoice"></i> # Factura</label>
+                            <input type="text" id="searchFactura" placeholder="Ej: 000123" onkeyup="if(event.key === 'Enter') buscarCuentas()">
+                        </div>
+                    
+                        <button class="btn btn-save btn-search-compact" onclick="buscarCuentas()">
+                            <i class="fa fa-search"></i> Buscar Facturas
                         </button>
-                    </div>
-                </div>
-            
-                <div class="cxc-main-grid hidden-detail" id="cxcGrid">
-                    <div class="card table-card-cxc">
-                        <div class="card-header-simple">
-                            <h3>Cuentas Activas</h3>
-                        </div>
-                        <div class="table-container">
-                            <table class="table-moka">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Factura</th>
-                                        <th>Cliente</th>
-                                        <th class="text-right">Total</th>
-                                        <th class="text-right">Saldo</th>
-                                        <th class="text-center">Estado</th>
-                                        <th class="text-center">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cxcBody">
-                                    <tr>
-                                        <td colspan="6" class="text-center placeholder-text">
-                                            <i class="fa fa-search fa-2x"></i>
-                                            <p>Use los filtros superiores para buscar cuentas</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    
+                        <button class="btn btn-clear btn-search-compact" onclick="limpiarFiltros()">
+                            <i class="fa fa-sync-alt"></i> Refrescar
+                        </button>
+                    </aside>
                 
-                    <div id="detalleCuentaContainer" class="card card-detail-cxc hidden">
-                        <div class="header-accent-cxc">
-                            <h3><i class="fa fa-money-bill-wave"></i> Pagos Factura #<span id="txtFacturaSeleccionada">0</span></h3>
-                            <button class="btn-close-detail" onclick="cerrarDetalle()">&times;</button>
-                        </div>
+                    <div class="main-content-cxc">
                         
-                        <div class="summary-balance-box">
-                            <div class="summary-info">
-                                <span class="label">Saldo Pendiente</span>
-                                <strong id="saldoPendienteTxt" class="text-danger">₡0.00</strong>
+                        <div class="card card-detalle card-no-margin">
+                            <div class="table-header">
+                                <h3>Resultados de Cartera</h3>
+                                <span class="badge badge-active" id="countResults">0 Facturas</span>
                             </div>
-                            <div class="summary-info">
-                                <span class="label">Próximo Vence</span>
-                                <strong id="proximoVenceTxt">--/--/--</strong>
+                        
+                            <div class="responsive-table scroll-detalle" style="max-height: 300px;">
+                                <table class="table-moka">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Factura</th>
+                                            <th>Cliente</th>
+                                            <th class="text-center">Total</th>
+                                            <th class="text-center">Saldo</th>
+                                            <th class="text-center">Estado</th>
+                                            <th class="text-center">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cxcBody">
+                                        </tbody>
+                                </table>
                             </div>
                         </div>
-
-                        <div class="table-container-mini">
-                            <table class="table-moka small-table">
-                                <thead>
-                                    <tr>
-                                        <th>Cuota</th>
-                                        <th>Vence</th>
-                                        <th class="text-right">Monto</th>
-                                        <th class="text-center">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="planPagosBody"></tbody>
-                            </table>
-                        </div>
+                    
+                        <aside id="detalleCuentaContainer" class="card card-detalle hidden">
+                            <div class="panel-header-inline">
+                                <h3 class="panel-subtitle no-margin">Plan de Pagos: Factura <span id="txtFacturaSeleccionada">---</span></h3>
+                                <div style="display: flex; gap: 15px; align-items: center;">
+                                    <p class="no-margin">Saldo Pendiente: <strong id="saldoPendienteTxt" class="text-danger">₡0,00</strong></p>
+                                    <button onclick="cerrarDetalle()" class="btn-close-detail" title="Cerrar detalle">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        
+                            <div class="responsive-table">
+                                <table class="table-moka table-small-font">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Vencimiento</th>
+                                            <th class="text-center">Monto</th>
+                                            <th class="text-center">Estado</th>
+                                            <th class="text-center">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cuotasBody">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </aside>
                     </div>
                 </div>
             </section>
