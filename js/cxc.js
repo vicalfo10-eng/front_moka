@@ -223,6 +223,7 @@ const dibujarTablaCuotas = (data) => {
             <td class="text-center">${inst.numero_cuota}</td>
             <td class="text-center">${new Date(inst.due_date).toLocaleDateString('es-CR')}</td>
             <td class="text-center">₡${formatearMoneda(parseFloat(inst.amount))}</td>
+            <td class="text-center">₡${formatearMoneda(parseFloat(inst.balance))}</td>
             <td class="text-center">
                 <span class="badge ${inst.status_text === 'PAGADA' ? 'badge-active' : 'badge-inactive'}">
                     ${inst.status_text}
