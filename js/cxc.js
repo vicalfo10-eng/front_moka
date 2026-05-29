@@ -232,7 +232,7 @@ const dibujarTablaCuotas = (data) => {
             <td class="text-center">
                 ${inst.status_text !== 'PAGADA' ? 
                     `<button class="btn-table" title="Cobrar Cuota" 
-                        onclick="confirmarCobro('${inst.id_cuota}', ${inst.amount}, '${inst.id_cxc}')">
+                        onclick="confirmarCobro('${inst.id_cuota}', ${inst.balance}, '${inst.id_cxc}')">
                         <i class="fa fa-cash-register"></i>
                     </button>` : 
                     `<i class="fa fa-check-circle text-success" title="Pagado"></i>`
@@ -244,6 +244,8 @@ const dibujarTablaCuotas = (data) => {
 }
 
 const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
+
+    const idUsuario = JSON.parse(localStorage.getItem("codigo"))
     const sugeridoFormateado = formatearMoneda(parseFloat(suggestedAmount))
 
     const { value: formValues } = await Swal.fire({
@@ -286,16 +288,27 @@ const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
         target: document.querySelector('.main'),
         
         preConfirm: () => {
+
             const monto = document.getElementById('swal-input-monto').value
             const metodo = document.getElementById('swal-input-metodo').value
+            const comprobante = document.getElementById('swal-input-comprobante').value
+
             if (!monto || monto <= 0) {
+
                 Swal.showValidationMessage('Debe ingresar un monto válido')
                 return false
+
             }
-            return { monto: parseFloat(monto), metodo: metodo }
+
+            return {
+                monto: parseFloat(monto),
+                metodo: metodo,
+                comprobante: comprobante
+            }
         },
 
         didOpen: () => {
+
             const inputMonto = document.getElementById('swal-input-monto')
             const selectMetodo = document.getElementById('swal-input-metodo')
             
@@ -313,6 +326,7 @@ const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
 
             // Visor dinámico centrado
             const preview = document.createElement('div')
+
             Object.assign(preview.style, {
                 marginTop: '15px',
                 padding: '10px',
@@ -328,13 +342,16 @@ const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
             inputMonto.parentElement.parentElement.appendChild(preview)
 
             inputMonto.addEventListener('input', (e) => {
+
                 const valorActual = parseFloat(e.target.value) || 0
                 preview.innerHTML = `Monto a procesar: <strong style="color: #28a745;">₡${formatearMoneda(valorActual)}</strong>`
+            
             })
         }
     })
 
     if (formValues) {
+
         try {
             Swal.fire({
                 title: 'Procesando...',
@@ -346,11 +363,13 @@ const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    receivable_id: receivableId,
                     installment_id: installmentId,
+                    receivable_id: receivableId,
+                    user_id: idUsuario,
                     amount: formValues.monto,
                     payment_method: formValues.metodo,
-                    date: new Date().toISOString().split('T')[0]
+                    reference: formValues.comprobante,
+                    payment_date: new Date().toISOString().split('T')[0]
                 })
             })
 
@@ -359,22 +378,27 @@ const confirmarCobro = async (installmentId, suggestedAmount, receivableId) => {
             if (result.success) {
                 await Swal.fire({
                     title: '¡Éxito!',
-                    text: 'Pago registrado y saldo actualizado.',
+                    text: result.msg,
                     icon: 'success',
                     confirmButtonColor: '#00B3A4',
                     target: document.querySelector('.main')
                 })
                 
-                if (typeof imprimirComprobanteAbono === 'function') {
-                    imprimirComprobanteAbono(result.payment_data)
+                if (result.success && result.payment_data) {
+                    if (typeof imprimirComprobanteAbono === 'function') {
+                        imprimirComprobanteAbono(result.payment_data);
+                    }
                 }
                 
                 buscarCuentas()
                 cerrarDetalle()
+
             } else {
+
                 throw new Error(result.message || 'Error en el servidor')
             }
         } catch (error) {
+            
             console.error("Error al cobrar:", error)
             Swal.fire({
                 title: 'Error',

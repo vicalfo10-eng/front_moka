@@ -239,84 +239,56 @@
 </body>
 
 <div id="modalFactura" class="modal-factura-overlay">
-        <div class="modal-factura-content">
-            <div id="ticket-print-area" class="ticket-container">
-                <div class="ticket-header text-center">
-                    <img src="assets/img2.jpeg" style="width: 60px; border-radius: 50%;">
-                    <h1>MOKA</h1>
-                    <p>Creaciones con Amor</p>
-                    <p>Alajuela, Costa Rica</p>
-                    <p>Tel: (506) 8577-6011</p>
-                    <div class="ticket-divider"></div>
-                    <p><strong>FACTURA #<span id="facturaNumero">000000</span></strong></p>
-                    <p id="facturaFecha"></p>
-                </div>
-
+    <div class="modal-factura-content">
+        <div id="ticket-print-area" class="ticket-container">
+            <div class="ticket-header text-center">
+                <img src="assets/img2.jpeg" style="width: 60px; border-radius: 50%;">
+                <h1>MOKA</h1>
+                <p>Creaciones con Amor</p>
+                <p>Alajuela, Costa Rica</p>
+                <p>Tel: (506) 8577-6011</p>
                 <div class="ticket-divider"></div>
-
-                <div class="ticket-info">
-                    <p><strong>Cliente:</strong> <span id="facturaCliente"></span></p>
-                    <p><strong>Vendedor:</strong> <span id="facturaVendedor"></span></p>
-                    <p><strong>Condición:</strong> <span id="facturaCondicion">CONTADO</span></p>
-                    <p id="infoPrimerPagoTicket" style="display:none;"><strong>Primer Pago:</strong> <span id="facturaPrimerPago"></span></p>
-                    <p id="infoVencimientoTicket" style="display:none;"><strong>Fecha Vence:</strong> <span id="facturaVencimiento"></span></p>
-                </div>
-                
-                <div class="ticket-divider"></div>
-
-                <table class="ticket-table">
-                    <thead>
-                        <tr>
-                            <th class="text-left">Código</th>
-                            <th class="text-left">Can/Des</th>
-                            <th class="text-left">Total</th>
-                        </tr>
-
-                        <tr>
-                            <th class="text-left">Producto</th>
-                        </tr>
-                    </thead>
-                    <tbody id="facturaDetalleBody">
-                        </tbody>
-                </table>
-
-                <div class="ticket-divider"></div>
-                <div class="ticket-totals">
-                    <div class="total-row">
-                        <span>SUBTOTAL:</span>
-                        <span id="facturaSubtotal"></span>
-                    </div>
-
-                    <div class="total-row">
-                        <span>DESCUENTO:</span>
-                        <span id="facturaDescuento"></span>
-                    </div>
-
-                    <div class="total-row">
-                        <span>IMPUESTOS:</span>
-                        <span id="facturaImpuestos"></span>
-                    </div>
-
-                    <div class="total-row total-final">
-                        <span>TOTAL:</span>
-                        <span id="facturaTotal"></span>
-                    </div>
-                </div>
-
-                <div class="ticket-divider"></div>
-                <p class="text-center">¡Gracias por su compra!</p>
-                <p class="text-center" style="font-size: 10px;">MOKA © 2026</p>
+                <p><strong>COMPROBANTE DE ABONO</strong></p>
+                <p><strong>RECIBO #<span id="facturaNumero">000000</span></strong></p>
+                <p id="facturaFecha">--/--/---- --:--</p>
             </div>
 
-            <div class="modal-factura-actions no-print">
-                <button class="btn-ticket-print" onclick="window.print()">
-                    <i class="fa fa-print"></i> Imprimir / Exportar PDF
-                </button>
+            <div class="ticket-divider"></div>
 
-                <button class="btn-ticket-close no-print" onclick="document.getElementById('modalFactura').style.display='none'" style="width: 100%;">
-                    Cerrar Vista Previa
-                </button>
+            <div class="ticket-info">
+                <p><strong>Cliente:</strong> <span id="facturaCliente">---</span></p>
+                <p><strong>Factura Ref:</strong> <span id="facturaReferencia">---</span></p>
+                <p><strong>Condición:</strong> <span>ABONO A CUENTA</span></p>
             </div>
+            
+            <div class="ticket-divider"></div>
+
+            <div class="ticket-totals">
+                <div class="total-row total-final">
+                    <span>MONTO PAGADO:</span>
+                    <span id="facturaTotal">₡0,00</span>
+                </div>
+
+                <div class="total-row" style="color: #d9534f; font-weight: bold; margin-top: 5px;">
+                    <span>SALDO PENDIENTE:</span>
+                    <span id="facturaSaldoRestante">₡0,00</span>
+                </div>
+            </div>
+
+            <div class="ticket-divider"></div>
+            <p class="text-center">¡Gracias por su abono!</p>
+            <p class="text-center" style="font-size: 10px;">MOKA © 2026</p>
+        </div>
+
+        <div class="modal-factura-actions no-print">
+            <button class="btn-ticket-print" onclick="window.print()">
+                <i class="fa fa-print"></i> Imprimir / Exportar PDF
+            </button>
+
+            <button class="btn-ticket-close no-print" onclick="cerrarModal()" style="width: 100%;">
+                Cerrar Vista Previa
+            </button>
         </div>
     </div>
+</div>
 </html>
