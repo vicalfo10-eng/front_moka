@@ -572,3 +572,16 @@ table tbody tr:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* Asterisco rojo para labels de campos obligatorios */
+.input-group label[for]:has(+ input[required])::after,
+.input-group label[for]:has(+ div > input[required])::after {
+    content: " *";
+    color: #d9534f; /* Rojo de MOKA */
+    font-weight: bold;
+}
+
+/* Estilo para campos obligatorios vacíos (opcional) */
+input[required]:placeholder-shown {
+    border-left: 4px solid #d9534f;
+}
