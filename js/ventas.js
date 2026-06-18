@@ -138,9 +138,6 @@ const toggleCreditOptions = () => {
     }
 }
 
-/**
- * Lógica de Búsqueda
- */
 const agregarProducto = async () => {
 
     const idInput = document.getElementById("codigoProducto").value.trim()
@@ -156,13 +153,22 @@ const agregarProducto = async () => {
     
     try {
 
-        // Llamada al API (Ajusta la URL según tu backend)
         const response = await fetch(`${API_URL}/product_register?codigo=${idInput}`)
         const data = await response.json()
 
         if (data.ok) {
-            const p = data.result // Ajustado según tu estructura de respuesta
-            const exists = carrito.find(item => item.id_producto === p.id_producto)
+
+            const result = data.result // Ajustado según tu estructura de respuesta
+            const exists = carrito.find(item => item.id_producto === result.id_producto)
+
+            if ( Number( result.activo ) === 0) {
+                return Swal.fire({
+                    title: "Producto Inactivo",
+                    html: `El producto <strong>${result.nombre}</strong> se encuentra inactivo en el sistema. No se puede agregar a la venta.`,
+                    icon: "warning",
+                    confirmButtonColor: '#17a2b8'
+                })
+            }
 
             if (exists) {
 
@@ -171,11 +177,11 @@ const agregarProducto = async () => {
 
             } else {
                 const nuevoItem = {
-                    id_producto: p.id_producto,
-                    codigo: p.codigo,
-                    nombre: p.nombre,
-                    precio: parseFloat(p.precio),
-                    impuesto_porc: parseFloat(p.impuesto),
+                    id_producto: result.id_producto,
+                    codigo: result.codigo,
+                    nombre: result.nombre,
+                    precio: parseFloat(result.precio),
+                    impuesto_porc: parseFloat(result.impuesto),
                     cantidad: 1,
                     descuento_porc: 0, // Porcentaje de descuento inicial
                     descuento: 0,      // Monto en colones
@@ -193,7 +199,7 @@ const agregarProducto = async () => {
 
         } else {
 
-            Swal.fire({
+            return Swal.fire({
                 title: "Información",
                 text: data.result.msg,
                 icon: "info",
@@ -202,7 +208,7 @@ const agregarProducto = async () => {
         }
     } catch (error) {
 
-        Swal.fire("Error", "Error al obtener el producto: " + error.message, "error")
+        return Swal.fire("Error", "Error al obtener el producto: " + error.message, "error")
     }
 }
 
