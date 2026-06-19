@@ -585,3 +585,77 @@ table tbody tr:hover {
 input[required]:placeholder-shown {
     border-left: 4px solid #d9534f;
 }
+
+/* --- Estilos del Modal de Búsqueda Avanzada MOKA --- */
+.modal-search-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 2000;
+}
+.modal-search-content {
+    background: #fff; padding: 25px; border-radius: 8px;
+    width: 90%; max-width: 650px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.modal-search-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 15px; border-bottom: 2px solid #f4f6f7; padding-bottom: 10px;
+}
+.modal-search-table-container {
+    max-height: 250px; overflow-y: auto; margin-top: 15px;
+}
+.tr-clickable {
+    cursor: pointer; transition: background 0.2s ease;
+}
+.tr-clickable:hover {
+    background-color: rgba(0, 179, 164, 0.1) !important; /* Color MOKA transparente */
+}
+
+/* ==========================================================================
+   MODAL DE BÚSQUEDA AVANZADA
+   ========================================================================== */
+
+.btn-close-modal-search {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #7f8c8d;
+    transition: color 0.2s ease;
+    padding: 0;
+}
+
+.btn-close-modal-search:hover {
+    color: #e74c3c;
+}
+
+/* Margen del grupo de entrada igual al style original */
+.modal-search-input-group {
+    margin-bottom: 15px !important;
+}
+
+/* Contenedor flex del buscador */
+.modal-search-flex-container {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
+/* Hace que el input se expanda ocupando el espacio restante (flex: 1) */
+.modal-search-flex-container input[type="text"] {
+    flex: 1 !important;
+}
+
+/* Estilo del botón Filtrar Turquesa de MOKA */
+.btn-moka-search {
+    background-color: #00B3A4 !important;
+    color: #ffffff !important;
+    white-space: nowrap;
+}
+
+/* Anchos de columnas en la tabla idénticos al 20% inline original */
+.table-moka th.col-codigo,
+.table-moka th.col-estado {
+    width: 20% !important;
+}

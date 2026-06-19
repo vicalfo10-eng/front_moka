@@ -65,60 +65,101 @@ const getFormData = () => {
 const limpiarFormulario = () => {
 
     document.getElementById("formClientes").reset()
+    document.getElementById("identificacion").value = ""
+    document.getElementById("identificacion").disabled = false
     editMode = false
 }
 
-/**
- * Lógica de Búsqueda
- */
-const buscarCliente = async () => {
+const abrirBusqueda = () => {
 
-    const idInput = document.getElementById("identificacion").value.trim()
-
-    if (!idInput) {
-        return Swal.fire({
-            title: "Información",
-            text: "El número de identificación es obligatorio.",
-            icon: "info",
-            confirmButtonColor: '#17a2b8'
-        })
-    }
+    document.getElementById("inputCriterioModal").value = document.getElementById("identificacion").value.trim()
+    document.getElementById("modalBusqueda").style.display = "flex"
+    document.getElementById("inputCriterioModal").focus()
     
-    try {
+    if (document.getElementById("inputCriterioModal").value !== "") {
+        ejecutarBusqueda()
+    }
+}
 
-        // Llamada al API (Ajusta la URL según tu backend)
-        const response = await fetch(`${API_URL}/customer_register?identificacion=${idInput}`)
+const cerrarBusqueda = () => {
+
+    document.getElementById("modalBusqueda").style.display = "none"
+    document.getElementById("tablaResultadosModalBody").innerHTML = `
+        <tr><td colspan="4" class="text-center">Escriba un criterio y presione Filtrar.</td></tr>
+    `
+}
+
+const ejecutarBusqueda = async () => {
+
+    const idInput = document.getElementById("inputCriterioModal").value.trim()
+    const tbody = document.getElementById("tablaResultadosModalBody")
+    
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center"><i class="fa fa-spinner fa-spin"></i> Buscando...</td></tr>`
+
+    try {
+        const response = await fetch(`${API_URL}/customer_register?term=${encodeURIComponent(idInput)}`)
         const data = await response.json()
 
-        if (data.ok) {
+        if (data.ok && data.result) {
 
-            document.getElementById("nombre").value = data.result.nombre;
-            document.getElementById("telefono").value = data.result.telefono;
-            document.getElementById("correo").value = data.result.correo;
-            document.getElementById("direccion").value = data.result.direccion;
-            if (data.result.activo === 1) {
-                document.querySelector('input[name="estado"][value="activo"]').checked = true;
-            } else {
-                document.querySelector('input[name="estado"][value="inactivo"]').checked = true;
+            tbody.innerHTML = ""
+            
+            const resultados = Array.isArray(data.result) ? data.result : [data.result]
+
+            if (resultados.length === 1 && resultados[0].ok === 0) {
+
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center">${resultados[0].msg || 'No se encontraron resultados.'}</td></tr>`
+                return
             }
 
-            editMode = true // Activamos modo edición
+            resultados.forEach(cat => {
 
+                const badgeEstado = cat.activo === 1 
+                    ? `<span class="badge badge-active">Activo</span>` 
+                    : `<span class="badge badge-inactive" style="background-color:#95a5a6; color:#fff; padding:2px 8px; border-radius:4px;">Inactivo</span>`
+
+                const tr = document.createElement("tr")
+                tr.className = "tr-clickable"
+                
+                // Envío de datos limpios a los inputs del mantenimiento principal
+                tr.onclick = () => seleccionarRegistro(cat.identificacion, cat.nombre, cat.telefono, cat.correo, cat.direccion, cat.activo)
+                
+                tr.innerHTML = `
+                    <td class="text-center"><strong>${cat.identificacion}</strong></td>
+                    <td>${cat.nombre}</td>
+                    <td class="text-center">${badgeEstado}</td>
+                `
+                tbody.appendChild(tr)
+            })
         } else {
 
-            editMode = false // No se encontró, modo nuevo registro
-
-            Swal.fire({
-                title: "Información",
-                text: data.result.msg,
-                icon: "info",
-                confirmButtonColor: '#17a2b8'
-            })
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center">No se encontraron resultados válidos.</td></tr>`
         }
     } catch (error) {
 
-        Swal.fire("Error", "Error al obtener el cliente: " + error.message, "error")
+        console.error("Error exacto en la renderización del modal:", error) // Nos ayuda a diagnosticar en consola
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Error al procesar la información del servidor.</td></tr>`
     }
+}
+
+const seleccionarRegistro = (identificacion, nombre, telefono, correo, direccion, activo) => {
+
+    document.getElementById("identificacion").disabled = true
+
+    document.getElementById("identificacion").value = identificacion
+    document.getElementById("nombre").value = nombre
+    document.getElementById("telefono").value = telefono
+    document.getElementById("correo").value = correo
+    document.getElementById("direccion").value = direccion
+
+    if (activo === 1) {
+        document.querySelector('input[name="estado"][value="activo"]').checked = true
+    } else {
+        document.querySelector('input[name="estado"][value="inactivo"]').checked = true
+    }
+
+    editMode = true
+    cerrarBusqueda()
 }
 
 /**

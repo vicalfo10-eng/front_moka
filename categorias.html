@@ -111,9 +111,6 @@
                                 <input type="text" id="codigo" placeholder="123"
                                     required
                                     style="flex: 1;">
-                                <button type="button" class="btn btn-search" onclick="buscarCategoria()" style="padding: 5px 15px;">
-                                    <i class="fa fa-search"></i>
-                                </button>
                             </div>
                         </div>
 
@@ -141,6 +138,9 @@
                         </div>
                     
                         <div class="button-container full-width">
+                            <button type="button" class="btn btn-search" onclick="abrirBusqueda()">
+                                <i class="fa fa-search"></i> Buscar
+                            </button>
                             <button type="button" class="btn btn-save" onclick="guardarCategoria()">
                                 <i class="fa fa-save"></i> Guardar
                             </button>
@@ -149,7 +149,7 @@
                                 <i class="fa fa-trash"></i> Eliminar
                             </button>
 
-                            <button type="reset" class="btn btn-clear">
+                            <button type="button" class="btn btn-clear" onclick="limpiarFormulario()">
                                 <i class="fa fa-eraser"></i> Limpiar
                             </button>
                         </div>
@@ -205,6 +205,47 @@
     <script src="js/config.js"></script>
     <script src="js/categorias.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- ================================================================= -->
+    <!-- MODAL DE BÚSQUEDA AVANZADA                                        -->
+    <!-- ================================================================= -->
+    <div id="modalBusqueda" class="modal-search-overlay">
+        <div class="modal-search-content">
+            <div class="modal-search-header">
+                <h3 class="no-margin"><i class="fa fa-search"></i> Buscar Categoría</h3>
+                <button onclick="cerrarBusqueda()" class="btn-close-modal-search">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="input-group modal-search-input-group">
+                <div class="modal-search-flex-container">
+                    <input type="text" id="inputCriterioModal" placeholder="Escriba el ID o Nombre de la categoría..." onkeyup="if(event.key === 'Enter') ejecutarBusqueda()">
+                    <button type="button" class="btn btn-save btn-moka-search" onclick="ejecutarBusqueda()">
+                        <i class="fa fa-search"></i> Filtrar
+                    </button>
+                </div>
+            </div>
+        
+            <div class="modal-search-table-container">
+                <table class="table-moka">
+                    <thead>
+                        <tr>
+                            <th class="text-center col-codigo">Código</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th class="text-center col-estado">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaResultadosModalBody">
+                        <tr>
+                            <td colspan="4" class="text-center">Escriba un criterio y presione Filtrar.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

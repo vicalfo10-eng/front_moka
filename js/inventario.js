@@ -91,13 +91,13 @@ const buscarProducto = async () => {
     try {
 
         // Llamada al API (Ajusta la URL según tu backend)
-        const response = await fetch(`${API_URL}/product_register?codigo=${idInput}`)
+        const response = await fetch(`${API_URL}/product_register?term=${idInput}`)
         const data = await response.json()
 
-        if (data.ok) {
+        if (data.ok && data.result) {
 
-            document.getElementById("codigoProducto").value = data.result.id_producto
-            document.getElementById("nombre").value = data.result.nombre
+            document.getElementById("codigoProducto").value = data.result[0].id_producto
+            document.getElementById("nombre").value = data.result[0].nombre
 
         } else {
 

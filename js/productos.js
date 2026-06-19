@@ -124,10 +124,108 @@ const limpiarFormulario = () => {
 
     document.getElementById("formProductos").reset()
 
+    document.getElementById("codigo").value = ""
+    document.getElementById("codigo").disabled = false
     document.getElementById("stock").value = ""
     document.getElementById("stock").disabled = false
 
     editMode = false
+}
+
+const abrirBusqueda = () => {
+
+    document.getElementById("inputCriterioModal").value = document.getElementById("codigo").value.trim()
+    document.getElementById("modalBusqueda").style.display = "flex"
+    document.getElementById("inputCriterioModal").focus()
+    
+    if (document.getElementById("inputCriterioModal").value !== "") {
+        ejecutarBusqueda()
+    }
+}
+
+const cerrarBusqueda = () => {
+
+    document.getElementById("modalBusqueda").style.display = "none"
+    document.getElementById("tablaResultadosModalBody").innerHTML = `
+        <tr><td colspan="4" class="text-center">Escriba un criterio y presione Filtrar.</td></tr>
+    `
+}
+
+const ejecutarBusqueda = async () => {
+
+    const idInput = document.getElementById("inputCriterioModal").value.trim()
+    const tbody = document.getElementById("tablaResultadosModalBody")
+    
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center"><i class="fa fa-spinner fa-spin"></i> Buscando...</td></tr>`
+
+    try {
+        const response = await fetch(`${API_URL}/product_register?term=${encodeURIComponent(idInput)}`)
+        const data = await response.json()
+
+        if (data.ok && data.result) {
+
+            tbody.innerHTML = ""
+            
+            const resultados = Array.isArray(data.result) ? data.result : [data.result]
+
+            if (resultados.length === 1 && resultados[0].ok === 0) {
+
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center">${resultados[0].msg || 'No se encontraron resultados.'}</td></tr>`
+                return
+            }
+
+            resultados.forEach(cat => {
+
+                const badgeEstado = cat.activo === 1 
+                    ? `<span class="badge badge-active">Activo</span>` 
+                    : `<span class="badge badge-inactive" style="background-color:#95a5a6; color:#fff; padding:2px 8px; border-radius:4px;">Inactivo</span>`
+
+                const tr = document.createElement("tr")
+                tr.className = "tr-clickable"
+                
+                // Envío de datos limpios a los inputs del mantenimiento principal
+                tr.onclick = () => seleccionarRegistro(cat.id_categoria, cat.id_proveedor, cat.codigo, cat.nombre, cat.precio, cat.impuesto, cat.stock, cat.stock_minimo, cat.activo)
+                
+                tr.innerHTML = `
+                    <td class="text-center"><strong>${cat.codigo}</strong></td>
+                    <td>${cat.nombre}</td>
+                    <td class="text-center">${badgeEstado}</td>
+                `
+                tbody.appendChild(tr)
+            })
+        } else {
+
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center">No se encontraron resultados válidos.</td></tr>`
+        }
+    } catch (error) {
+
+        console.error("Error exacto en la renderización del modal:", error) // Nos ayuda a diagnosticar en consola
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Error al procesar la información del servidor.</td></tr>`
+    }
+}
+
+const seleccionarRegistro = (id_categoria, id_proveedor, codigo, nombre, precio, impuesto, stock, stock_minimo, activo) => {
+
+    document.getElementById("codigo").disabled = true
+    document.getElementById("stock").disabled = true
+    
+    document.getElementById("codigo").value = codigo
+    document.getElementById("categorySelect").value = id_categoria
+    document.getElementById("supplierSelect").value = id_proveedor
+    document.getElementById("nombre").value = nombre
+    document.getElementById("precio").value = precio
+    document.getElementById("impuesto").value = impuesto
+    document.getElementById("stock").value = stock
+    document.getElementById("stock_min").value = stock_minimo
+
+    if (activo === 1) {
+        document.querySelector('input[name="estado"][value="activo"]').checked = true
+    } else {
+        document.querySelector('input[name="estado"][value="inactivo"]').checked = true
+    }
+
+    editMode = true
+    cerrarBusqueda()
 }
 
 /* =========================
@@ -187,68 +285,6 @@ const cargarProveedores = async () => {
     } catch (error) {
         console.error("Error cargando proveedores:", error)
         select.innerHTML = '<option value="">Error al cargar proveedores</option>'
-    }
-}
-
-/**
- * Lógica de Búsqueda
- */
-const buscarProducto = async () => {
-
-    const idInput = document.getElementById("codigo").value.trim()
-    document.getElementById("stock").disabled = true
-
-    if (!idInput) {
-        return Swal.fire({
-            title: "Información",
-            text: "El código del producto es obligatorio.",
-            icon: "info",
-            confirmButtonColor: '#17a2b8'
-        })
-    }
-    
-    try {
-
-        // Llamada al API (Ajusta la URL según tu backend)
-        const response = await fetch(`${API_URL}/product_register?codigo=${idInput}`)
-        const data = await response.json()
-
-        if (data.ok) {
-
-            document.getElementById("categorySelect").value = data.result.id_categoria
-            document.getElementById("supplierSelect").value = data.result.id_proveedor
-            document.getElementById("nombre").value = data.result.nombre
-            document.getElementById("precio").value = data.result.precio
-            document.getElementById("impuesto").value = data.result.impuesto
-            document.getElementById("stock").value = data.result.stock
-            document.getElementById("stock_min").value = data.result.stock_minimo
-
-            if (data.result.activo === 1) {
-                document.querySelector('input[name="estado"][value="activo"]').checked = true
-            } else {
-                document.querySelector('input[name="estado"][value="inactivo"]').checked = true
-            }
-
-            editMode = true // Activamos modo edición
-
-        } else {
-
-            editMode = false // No se encontró, modo nuevo registro
-
-            Swal.fire({
-                title: "Información",
-                text: data.result.msg,
-                icon: "info",
-                confirmButtonColor: '#17a2b8'
-            })
-
-            document.getElementById("stock").value = ""
-            document.getElementById("stock").disabled = false
-        }
-
-    } catch (error) {
-
-        Swal.fire("Error", "Error al obtener el producto: " + error.message, "error")
     }
 }
 

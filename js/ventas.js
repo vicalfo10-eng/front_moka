@@ -153,18 +153,18 @@ const agregarProducto = async () => {
     
     try {
 
-        const response = await fetch(`${API_URL}/product_register?codigo=${idInput}`)
+        const response = await fetch(`${API_URL}/product_register?term=${idInput}`)
         const data = await response.json()
 
-        if (data.ok) {
+        if (data.ok && data.result) {
 
             const result = data.result // Ajustado según tu estructura de respuesta
             const exists = carrito.find(item => item.id_producto === result.id_producto)
 
-            if ( Number( result.activo ) === 0) {
+            if ( Number( result[0].activo ) === 0) {
                 return Swal.fire({
                     title: "Producto Inactivo",
-                    html: `El producto <strong>${result.nombre}</strong> se encuentra inactivo en el sistema. No se puede agregar a la venta.`,
+                    html: `El producto <strong>${result[0].nombre}</strong> se encuentra inactivo en el sistema. No se puede agregar a la venta.`,
                     icon: "warning",
                     confirmButtonColor: '#17a2b8'
                 })
@@ -177,11 +177,11 @@ const agregarProducto = async () => {
 
             } else {
                 const nuevoItem = {
-                    id_producto: result.id_producto,
-                    codigo: result.codigo,
-                    nombre: result.nombre,
-                    precio: parseFloat(result.precio),
-                    impuesto_porc: parseFloat(result.impuesto),
+                    id_producto: result[0].id_producto,
+                    codigo: result[0].codigo,
+                    nombre: result[0].nombre,
+                    precio: parseFloat(result[0].precio),
+                    impuesto_porc: parseFloat(result[0].impuesto),
                     cantidad: 1,
                     descuento_porc: 0, // Porcentaje de descuento inicial
                     descuento: 0,      // Monto en colones
